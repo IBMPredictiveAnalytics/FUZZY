@@ -1,0 +1,43 @@
+<!-- ***************************************************************** -->
+<!--                                                                   -->
+<!-- Licensed Materials - Property of IBM                              -->
+<!--                                                                   -->
+<!-- IBM SPSS Products: Statistics Common                              -->
+<!--                                                                   -->
+<!-- (C) Copyright IBM Corp. 1989, 2013                                -->
+<!--                                                                   -->
+<!-- US Government Users Restricted Rights - Use, duplication or       -->
+<!-- disclosure restricted by GSA ADP Schedule Contract with IBM       -->
+<!-- Corp.                                                             -->
+<!--                                                                   -->
+<!-- ***************************************************************** -->
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Jon Peck (SPSS Inc.) -->
+<Command xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extension-1.0.xsd" Name="FUZZY" Language="Python">
+	<Subcommand Name="" Occurrence="Optional">
+		<Parameter Name="DEMANDERDS" ParameterType="DatasetName"/>
+		<Parameter Name="SUPPLIERDS" ParameterType="DatasetName"/>
+		<Parameter Name="GROUP" ParameterType="VariableName"/>
+		<Parameter Name="DS3" ParameterType="DatasetName"/>
+		<Parameter Name="BY" ParameterType="VariableNameList"/>
+		<Parameter Name="SUPPLIERID" ParameterType="VariableName"/>
+		<Parameter Name="NEWDEMANDERIDVARS" ParameterType="VariableNameList"/>
+		<Parameter Name="COPYTODEMANDER" ParameterType="VariableNameList"/>
+		<Parameter Name="DRAWPOOLSIZE" ParameterType="VariableName"/>
+		<Parameter Name="MATCHGROUPVAR" ParameterType="VariableName"/>
+		<Parameter Name="DEMANDERID" ParameterType="VariableName"/>
+		<Parameter Name="FUZZ" ParameterType="NumberList"/>
+		<Parameter Name="EXACTPRIORITY" ParameterType="Keyword"/>
+		<Parameter Name="CUSTOMFUZZ" ParameterType="QuotedString"/>
+	</Subcommand>
+	<Subcommand Name="OPTIONS" Occurrence="Optional">
+		<Parameter Name="SAMPLEWITHREPLACEMENT" ParameterType="Keyword"/>
+		<Parameter Name="MINIMIZEMEMORY" ParameterType="Keyword"/>
+		<Parameter Name="SHUFFLE" ParameterType="Keyword"/>
+		<Parameter Name="SEED" ParameterType="Number"/>
+	</Subcommand>
+	<Subcommand Name="OUTFILE" Occurrence="Optional">
+		<Parameter Name="LOGFILE" ParameterType="OutputFile"/>
+		<Parameter Name="ACCESSMODE" ParameterType="Keyword"/>
+	</Subcommand>
+	<Subcommand Name="HELP" Occurrence="Optional"/>
+</Command>
