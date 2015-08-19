@@ -1,0 +1,230 @@
+#/***********************************************************************
+# * Licensed Materials - Property of IBM 
+# *
+# * IBM SPSS Products: Statistics Common
+# *
+# * (C) Copyright IBM Corp. 1989, 2014
+# *
+# * US Government Users Restricted Rights - Use, duplication or disclosure
+# * restricted by GSA ADP Schedule Contract with IBM Corp. 
+# ************************************************************************/
+
+# NLS_ENCODING=UTF-8
+# IBMUPYTH
+
+
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2014-05-21 17:51+China Standard Time\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: FUZZY.py:247
+msgid "---"
+msgstr ""
+"---"
+
+#: FUZZY.py:340
+msgid "The required demander or supplier dataset name was not specified"
+msgstr ""
+"필요한 요구자 또는 공급자 데이터 세트 이름이 지정되지 않았습니다."
+
+#: FUZZY.py:342
+msgid "A group variable must be specified if the demander and supplier datasets are the same"
+msgstr ""
+"요구자 및 공급자 데이터 세트가 같은 경우 집단변수를 지정해야 합니다."
+
+#: FUZZY.py:344
+msgid "A group variable cannot be used unless the demander and supplier datasets are the same"
+msgstr ""
+"요구자 및 공급자 데이터 세트가 같지 않으면 집단변수를 사용할 수 없습니다."
+
+#: FUZZY.py:346
+msgid "COPYTODEMANDER cannot be used with GROUP"
+msgstr ""
+"COPYTODEMANDER는 GROUP과 함께 사용할 수 없습니다."
+
+#: FUZZY.py:349
+msgid "Error: variables can only be copied to the demander dataset if only a single match is requested"
+msgstr ""
+"오류: 단일 매치 항목만 요청될 경우 변수는 요구자 데이터 세트에만 복사할 수 있습니다."
+
+#: FUZZY.py:355
+msgid ""
+"Match id variable names are not unique or none was specified\n"
+msgstr ""
+"매치 ID 변수 이름이 고유하지 않거나 지정되지 않았음\n"
+
+#: FUZZY.py:358
+msgid "List of fuzz values does not match list of BY variables.  Fuzz: %s"
+msgstr ""
+"퍼즈 값 목록이 BY 변수 목록과 매치하지 않습니다.  퍼즈: %s"
+
+#: FUZZY.py:366
+msgid "Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"
+msgstr ""
+"최소 메모리로는 대체 수행 표본추출을 사용할 수 없습니다. 표본추출을 대체 없이 사용하십시오."
+
+#: FUZZY.py:393
+msgid "Supplier dataset id variable not found: %s"
+msgstr ""
+"공급자 데이터 세트 ID 변수를 찾을 수 없습니다: %s"
+
+#: FUZZY.py:426
+msgid "Supplier dataset variable not found: %s"
+msgstr ""
+"공급자 데이터 세트 변수를 찾을 수 없습니다: %s"
+
+#: FUZZY.py:439
+msgid "Error: supplier/demander type conflicts exist for variables: "
+msgstr ""
+"오류: 공급자/요구자 유형 충돌이 변수에 있습니다: "
+
+#: FUZZY.py:506
+msgid "Case-control matching"
+msgstr ""
+"케이스 대조 매칭"
+
+#: FUZZY.py:508
+msgid "Case Control Matching Statistics"
+msgstr ""
+"케이스 대조 매칭 통계량"
+
+#: FUZZY.py:510
+msgid "Exact Matches"
+msgstr ""
+"정확한 매치"
+
+#: FUZZY.py:510
+msgid "Fuzzy Matches"
+msgstr ""
+"퍼지 매치"
+
+#: FUZZY.py:510
+msgid "Unmatched Including Missing Keys"
+msgstr ""
+"누락된 키를 포함하여 매치되지 않음"
+
+#: FUZZY.py:511
+msgid "Log file"
+msgstr ""
+"로그 파일"
+
+#: FUZZY.py:511
+msgid "Maximize Matching Performance"
+msgstr ""
+"매칭 성능 최대화"
+
+#: FUZZY.py:511
+msgid "Sampling"
+msgstr ""
+"표본추출"
+
+#: FUZZY.py:511
+msgid "Unmatched with Valid Keys"
+msgstr ""
+"유효한 키와 매치되지 않음"
+
+#: FUZZY.py:512
+msgid "with replacement"
+msgstr ""
+"대체 수행"
+
+#: FUZZY.py:512
+msgid "without replacement"
+msgstr ""
+"대체 안함"
+
+#: FUZZY.py:513
+msgid "no"
+msgstr ""
+"아니오"
+
+#: FUZZY.py:513
+msgid "none"
+msgstr ""
+"없음"
+
+#: FUZZY.py:513
+msgid "yes"
+msgstr ""
+"예"
+
+#: FUZZY.py:515
+msgid "Match Type"
+msgstr ""
+"매치 유형"
+
+#: FUZZY.py:518 FUZZY.py:965 FUZZY.py:968
+msgid "Count"
+msgstr ""
+"빈도"
+
+#: FUZZY.py:521
+msgid "Exact (All Variables)"
+msgstr ""
+"정확한 매치(모든 변수)"
+
+#: FUZZY.py:527
+msgid "Fuzzy Match Tries"
+msgstr ""
+"퍼지 매치 시도"
+
+#: FUZZY.py:527
+msgid "Incremental Rejection Percentage"
+msgstr ""
+"증분 거부 퍼센트"
+
+#: FUZZY.py:527 FUZZY.py:533 FUZZY.py:537
+msgid "Value"
+msgstr ""
+"값"
+
+#: FUZZY.py:528
+msgid "Tries is the number of match comparisons before drawing.  Rejection percentage shows the match rejection rate.  Rejections are attributed to the first variable in the BY list that causes rejection."
+msgstr ""
+"시도는 그리기 전 매치 비교 수입니다.  거부 퍼센트는 매치 거부율을 표시합니다.  거부는 거부를 일으키는 BY 목록의 첫 번째 변수에 기인합니다."
+
+#: FUZZY.py:539
+msgid "Case Control Match Tolerances"
+msgstr ""
+"케이스 대조 매칭 공차"
+
+#: FUZZY.py:540
+msgid "Match Variables"
+msgstr ""
+"변수 매치"
+
+#: FUZZY.py:583
+msgid "Demander id variable not found, or it duplicates a name in the supplier dataset: %s"
+msgstr ""
+"요구자 ID 변수가 없거나 공급자 데이터 세트의 이름과 중복됩니다. %s"
+
+#: FUZZY.py:934
+msgid "Undefined variable in BY list: %s"
+msgstr ""
+"BY 목록의 정의되지 않은 변수: %s"
+
+#: FUZZY.py:955
+msgid "Distribution of Available Matches"
+msgstr ""
+"사용 가능한 매치의 분포"
+
+#: FUZZY.py:956
+msgid "Average matching cases available: %.2f"
+msgstr ""
+"사용 가능한 평균 매칭 케이스: %.2f"
+
+
+
