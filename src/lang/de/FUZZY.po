@@ -1,0 +1,230 @@
+#/***********************************************************************
+# * Licensed Materials - Property of IBM 
+# *
+# * IBM SPSS Products: Statistics Common
+# *
+# * (C) Copyright IBM Corp. 1989, 2014
+# *
+# * US Government Users Restricted Rights - Use, duplication or disclosure
+# * restricted by GSA ADP Schedule Contract with IBM Corp. 
+# ************************************************************************/
+
+# NLS_ENCODING=UTF-8
+# IBMUPYTH
+
+
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2014-05-21 17:51+China Standard Time\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: FUZZY.py:247
+msgid "---"
+msgstr ""
+"---"
+
+#: FUZZY.py:340
+msgid "The required demander or supplier dataset name was not specified"
+msgstr ""
+"Der erforderliche Name des anfordernden Datasets oder Bereitstellerdatasets wurde nicht angegeben"
+
+#: FUZZY.py:342
+msgid "A group variable must be specified if the demander and supplier datasets are the same"
+msgstr ""
+"Wenn anforderndes Dataset und Bereitstellerdataset identisch sind, muss eine Gruppenvariable angegeben werden"
+
+#: FUZZY.py:344
+msgid "A group variable cannot be used unless the demander and supplier datasets are the same"
+msgstr ""
+"Eine Gruppenvariable kann nur verwendet werden, wenn das anfordernde Dataset und Bereitstellerdataset identisch sind"
+
+#: FUZZY.py:346
+msgid "COPYTODEMANDER cannot be used with GROUP"
+msgstr ""
+"COPYTODEMANDER kann nicht mit GROUP verwendet werden"
+
+#: FUZZY.py:349
+msgid "Error: variables can only be copied to the demander dataset if only a single match is requested"
+msgstr ""
+"Fehler: Variablen können nur in das anfordernde Dataset kopiert werden, wenn nur eine einzige Übereinstimmung angefordert wird."
+
+#: FUZZY.py:355
+msgid ""
+"Match id variable names are not unique or none was specified\n"
+msgstr ""
+"Die abgeglichenen Variablennamen sind nicht eindeutig oder es wurden keine angegeben\n"
+
+#: FUZZY.py:358
+msgid "List of fuzz values does not match list of BY variables.  Fuzz: %s"
+msgstr ""
+"Die Liste der Unschärfewerte entspricht nicht der Liste der BY-Variablen. Unschärfe: %s"
+
+#: FUZZY.py:366
+msgid "Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"
+msgstr ""
+"Die Stichprobenziehung mit Ersetzung kann bei Speicherminimierung nicht verwendet werden. Stichprobenziehung ohne Ersetzung verwenden"
+
+#: FUZZY.py:393
+msgid "Supplier dataset id variable not found: %s"
+msgstr ""
+"Variable für Bereitstellerdataset-ID nicht gefunden: %s"
+
+#: FUZZY.py:426
+msgid "Supplier dataset variable not found: %s"
+msgstr ""
+"Variable für Bereitstellerdataset nicht gefunden: %s"
+
+#: FUZZY.py:439
+msgid "Error: supplier/demander type conflicts exist for variables: "
+msgstr ""
+"Fehler: Konflikte des Typs Bereitstellerdatasets/anforderndes Datasets für Variablen vorhanden: "
+
+#: FUZZY.py:506
+msgid "Case-control matching"
+msgstr ""
+"Fallkontrollabgleich"
+
+#: FUZZY.py:508
+msgid "Case Control Matching Statistics"
+msgstr ""
+"Übereinstimmungsstatistiken für Fallkontrolle"
+
+#: FUZZY.py:510
+msgid "Exact Matches"
+msgstr ""
+"Genaue Übereinstimmungen"
+
+#: FUZZY.py:510
+msgid "Fuzzy Matches"
+msgstr ""
+"Grobe Übereinstimmungen"
+
+#: FUZZY.py:510
+msgid "Unmatched Including Missing Keys"
+msgstr ""
+"Fehlende Übereinstimmungen, einschließlich fehlender Schlüssel"
+
+#: FUZZY.py:511
+msgid "Log file"
+msgstr ""
+"Protokolldatei"
+
+#: FUZZY.py:511
+msgid "Maximize Matching Performance"
+msgstr ""
+"Abgleichsleistung maximieren"
+
+#: FUZZY.py:511
+msgid "Sampling"
+msgstr ""
+"Stichprobenziehung"
+
+#: FUZZY.py:511
+msgid "Unmatched with Valid Keys"
+msgstr ""
+"Fehlende Übereinstimmung mit gültigen Schlüsseln"
+
+#: FUZZY.py:512
+msgid "with replacement"
+msgstr ""
+"mit Ersetzung"
+
+#: FUZZY.py:512
+msgid "without replacement"
+msgstr ""
+"ohne Ersetzung"
+
+#: FUZZY.py:513
+msgid "no"
+msgstr ""
+"Nein"
+
+#: FUZZY.py:513
+msgid "none"
+msgstr ""
+"keine"
+
+#: FUZZY.py:513
+msgid "yes"
+msgstr ""
+"Ja"
+
+#: FUZZY.py:515
+msgid "Match Type"
+msgstr ""
+"Übereinstimmungstyp"
+
+#: FUZZY.py:518 FUZZY.py:965 FUZZY.py:968
+msgid "Count"
+msgstr ""
+"Anzahl"
+
+#: FUZZY.py:521
+msgid "Exact (All Variables)"
+msgstr ""
+"Genau (Alle Variablen)"
+
+#: FUZZY.py:527
+msgid "Fuzzy Match Tries"
+msgstr ""
+"Versuche mit groben Übereinstimmungen"
+
+#: FUZZY.py:527
+msgid "Incremental Rejection Percentage"
+msgstr ""
+"Inkrementelle Ablehnungsquote"
+
+#: FUZZY.py:527 FUZZY.py:533 FUZZY.py:537
+msgid "Value"
+msgstr ""
+"Wert"
+
+#: FUZZY.py:528
+msgid "Tries is the number of match comparisons before drawing.  Rejection percentage shows the match rejection rate.  Rejections are attributed to the first variable in the BY list that causes rejection."
+msgstr ""
+"Versuche ist die Anzahl der Übereinstimmungsvergleiche vor dem Erstellen. Die Ablehnungsquote zeigt die Ablehnungsrate für Übereinstimmungen an. Ablehnungen werden der ersten Variablen in der BY-Liste zugeschrieben, die zu einer Ablehnung führt."
+
+#: FUZZY.py:539
+msgid "Case Control Match Tolerances"
+msgstr ""
+"Übereinstimmungstoleranzen für Fallkontrolle"
+
+#: FUZZY.py:540
+msgid "Match Variables"
+msgstr ""
+"Übereinstimmungsvariablen"
+
+#: FUZZY.py:583
+msgid "Demander id variable not found, or it duplicates a name in the supplier dataset: %s"
+msgstr ""
+"Variable für anfordernde ID nicht gefunden oder sie wird bereits für einen Namen im Bereitstellerdataset verwendet: %s"
+
+#: FUZZY.py:934
+msgid "Undefined variable in BY list: %s"
+msgstr ""
+"Nicht definierte Variable in BY-Liste: %s"
+
+#: FUZZY.py:955
+msgid "Distribution of Available Matches"
+msgstr ""
+"Verteilung verfügbarer Übereinstimmungen"
+
+#: FUZZY.py:956
+msgid "Average matching cases available: %.2f"
+msgstr ""
+"Durchschnittlich verfügbare übereinstimmende Fälle: %.2f"
+
+
+
