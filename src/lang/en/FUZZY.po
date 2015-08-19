@@ -1,0 +1,191 @@
+#/***********************************************************************
+# * Licensed Materials - Property of IBM 
+# *
+# * IBM SPSS Products: Statistics Common
+# *
+# * (C) Copyright IBM Corp. 1989, 2014
+# *
+# * US Government Users Restricted Rights - Use, duplication or disclosure
+# * restricted by GSA ADP Schedule Contract with IBM Corp. 
+# ************************************************************************/
+
+# NLS_ENCODING=UTF-8
+# IBMUPYTH
+
+
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2014-05-21 17:51+China Standard Time\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: FUZZY.py:247
+msgid "---"
+msgstr ""
+
+#: FUZZY.py:340
+msgid "The required demander or supplier dataset name was not specified"
+msgstr ""
+
+#: FUZZY.py:342
+msgid "A group variable must be specified if the demander and supplier datasets are the same"
+msgstr ""
+
+#: FUZZY.py:344
+msgid "A group variable cannot be used unless the demander and supplier datasets are the same"
+msgstr ""
+
+#: FUZZY.py:346
+msgid "COPYTODEMANDER cannot be used with GROUP"
+msgstr ""
+
+#: FUZZY.py:349
+msgid "Error: variables can only be copied to the demander dataset if only a single match is requested"
+msgstr ""
+
+#: FUZZY.py:355
+msgid ""
+"Match id variable names are not unique or none was specified\n"
+msgstr ""
+
+#: FUZZY.py:358
+msgid "List of fuzz values does not match list of BY variables.  Fuzz: %s"
+msgstr ""
+
+#: FUZZY.py:366
+msgid "Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"
+msgstr ""
+
+#: FUZZY.py:393
+msgid "Supplier dataset id variable not found: %s"
+msgstr ""
+
+#: FUZZY.py:426
+msgid "Supplier dataset variable not found: %s"
+msgstr ""
+
+#: FUZZY.py:439
+msgid "Error: supplier/demander type conflicts exist for variables: "
+msgstr ""
+
+#: FUZZY.py:506
+msgid "Case-control matching"
+msgstr ""
+
+#: FUZZY.py:508
+msgid "Case Control Matching Statistics"
+msgstr ""
+
+#: FUZZY.py:510
+msgid "Exact Matches"
+msgstr ""
+
+#: FUZZY.py:510
+msgid "Fuzzy Matches"
+msgstr ""
+
+#: FUZZY.py:510
+msgid "Unmatched Including Missing Keys"
+msgstr ""
+
+#: FUZZY.py:511
+msgid "Log file"
+msgstr ""
+
+#: FUZZY.py:511
+msgid "Maximize Matching Performance"
+msgstr ""
+
+#: FUZZY.py:511
+msgid "Sampling"
+msgstr ""
+
+#: FUZZY.py:511
+msgid "Unmatched with Valid Keys"
+msgstr ""
+
+#: FUZZY.py:512
+msgid "with replacement"
+msgstr ""
+
+#: FUZZY.py:512
+msgid "without replacement"
+msgstr ""
+
+#: FUZZY.py:513
+msgid "no"
+msgstr ""
+
+#: FUZZY.py:513
+msgid "none"
+msgstr ""
+
+#: FUZZY.py:513
+msgid "yes"
+msgstr ""
+
+#: FUZZY.py:515
+msgid "Match Type"
+msgstr ""
+
+#: FUZZY.py:518 FUZZY.py:965 FUZZY.py:968
+msgid "Count"
+msgstr ""
+
+#: FUZZY.py:521
+msgid "Exact (All Variables)"
+msgstr ""
+
+#: FUZZY.py:527
+msgid "Fuzzy Match Tries"
+msgstr ""
+
+#: FUZZY.py:527
+msgid "Incremental Rejection Percentage"
+msgstr ""
+
+#: FUZZY.py:527 FUZZY.py:533 FUZZY.py:537
+msgid "Value"
+msgstr ""
+
+#: FUZZY.py:528
+msgid "Tries is the number of match comparisons before drawing.  Rejection percentage shows the match rejection rate.  Rejections are attributed to the first variable in the BY list that causes rejection."
+msgstr ""
+
+#: FUZZY.py:539
+msgid "Case Control Match Tolerances"
+msgstr ""
+
+#: FUZZY.py:540
+msgid "Match Variables"
+msgstr ""
+
+#: FUZZY.py:583
+msgid "Demander id variable not found, or it duplicates a name in the supplier dataset: %s"
+msgstr ""
+
+#: FUZZY.py:934
+msgid "Undefined variable in BY list: %s"
+msgstr ""
+
+#: FUZZY.py:955
+msgid "Distribution of Available Matches"
+msgstr ""
+
+#: FUZZY.py:956
+msgid "Average matching cases available: %.2f"
+msgstr ""
+
+
+
