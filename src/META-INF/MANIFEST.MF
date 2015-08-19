@@ -1,0 +1,18 @@
+Name: FUZZY
+Dialog-Specs: FUZZY.spd
+Command-Specs: FUZZY.xml
+Code-Files: FUZZY.py
+Misc-Files: markdown.html,extsyntax.css,IBMdialogicon.png
+Summary: Perform exact or fuzzy case-control matching.
+Description: This procedure matches cases and controls by utilizing ra
+ ndom draws from the controls, based on a specified set of key variabl
+ es. The command supports exact and fuzzy matching.  The input can be 
+ in a single dataset, or the cases and controls can be in different da
+ tasets.
+Author: JKP, IBM SPSS
+Version: 1.4.7
+Product-Version: 18
+Date: 1/2/2014
+Categories: utility
+Plugins: Python
+Translation-Catalogues: lang
