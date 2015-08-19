@@ -1,0 +1,230 @@
+#/***********************************************************************
+# * Licensed Materials - Property of IBM 
+# *
+# * IBM SPSS Products: Statistics Common
+# *
+# * (C) Copyright IBM Corp. 1989, 2014
+# *
+# * US Government Users Restricted Rights - Use, duplication or disclosure
+# * restricted by GSA ADP Schedule Contract with IBM Corp. 
+# ************************************************************************/
+
+# NLS_ENCODING=UTF-8
+# IBMUPYTH
+
+
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2014-05-21 17:51+China Standard Time\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: FUZZY.py:247
+msgid "---"
+msgstr ""
+"---"
+
+#: FUZZY.py:340
+msgid "The required demander or supplier dataset name was not specified"
+msgstr ""
+"未指定必要的需求者或供應商資料集名稱"
+
+#: FUZZY.py:342
+msgid "A group variable must be specified if the demander and supplier datasets are the same"
+msgstr ""
+"如果需求者及供應商資料集相同，必須指定群組變數"
+
+#: FUZZY.py:344
+msgid "A group variable cannot be used unless the demander and supplier datasets are the same"
+msgstr ""
+"除非需求者及供應商資料集相同，否則無法使用群組變數"
+
+#: FUZZY.py:346
+msgid "COPYTODEMANDER cannot be used with GROUP"
+msgstr ""
+"COPYTODEMANDER 不能與 GROUP 搭配使用"
+
+#: FUZZY.py:349
+msgid "Error: variables can only be copied to the demander dataset if only a single match is requested"
+msgstr ""
+"錯誤：如果只要求單一相符項，則只能將變數複製到要求者資料集"
+
+#: FUZZY.py:355
+msgid ""
+"Match id variable names are not unique or none was specified\n"
+msgstr ""
+"相符 ID 變數名稱不是唯一的或未指定\n"
+
+#: FUZZY.py:358
+msgid "List of fuzz values does not match list of BY variables.  Fuzz: %s"
+msgstr ""
+"模糊值清單與 BY 變數清單不相符。模糊：%s"
+
+#: FUZZY.py:366
+msgid "Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"
+msgstr ""
+"放回取樣無法與最小化記憶體搭配使用。使用不放回取樣"
+
+#: FUZZY.py:393
+msgid "Supplier dataset id variable not found: %s"
+msgstr ""
+"找不到供應商資料集 ID 變數：%s"
+
+#: FUZZY.py:426
+msgid "Supplier dataset variable not found: %s"
+msgstr ""
+"找不到供應商資料集變數：%s"
+
+#: FUZZY.py:439
+msgid "Error: supplier/demander type conflicts exist for variables: "
+msgstr ""
+"錯誤：存在變數的供應商/要求者類型衝突："
+
+#: FUZZY.py:506
+msgid "Case-control matching"
+msgstr ""
+"觀察值控制相符"
+
+#: FUZZY.py:508
+msgid "Case Control Matching Statistics"
+msgstr ""
+"觀察值控制相符統計資料"
+
+#: FUZZY.py:510
+msgid "Exact Matches"
+msgstr ""
+"完全相符"
+
+#: FUZZY.py:510
+msgid "Fuzzy Matches"
+msgstr ""
+"模糊相符"
+
+#: FUZZY.py:510
+msgid "Unmatched Including Missing Keys"
+msgstr ""
+"包含遺漏關鍵值的不相符項"
+
+#: FUZZY.py:511
+msgid "Log file"
+msgstr ""
+"日誌檔"
+
+#: FUZZY.py:511
+msgid "Maximize Matching Performance"
+msgstr ""
+"最大化比對效能"
+
+#: FUZZY.py:511
+msgid "Sampling"
+msgstr ""
+"取樣"
+
+#: FUZZY.py:511
+msgid "Unmatched with Valid Keys"
+msgstr ""
+"具有有效索引鍵的不相符項"
+
+#: FUZZY.py:512
+msgid "with replacement"
+msgstr ""
+"放回"
+
+#: FUZZY.py:512
+msgid "without replacement"
+msgstr ""
+"不放回"
+
+#: FUZZY.py:513
+msgid "no"
+msgstr ""
+"否"
+
+#: FUZZY.py:513
+msgid "none"
+msgstr ""
+"無"
+
+#: FUZZY.py:513
+msgid "yes"
+msgstr ""
+"是"
+
+#: FUZZY.py:515
+msgid "Match Type"
+msgstr ""
+"相符類型"
+
+#: FUZZY.py:518 FUZZY.py:965 FUZZY.py:968
+msgid "Count"
+msgstr ""
+"計數"
+
+#: FUZZY.py:521
+msgid "Exact (All Variables)"
+msgstr ""
+"完全（所有變數）"
+
+#: FUZZY.py:527
+msgid "Fuzzy Match Tries"
+msgstr ""
+"模糊符合樹狀結構"
+
+#: FUZZY.py:527
+msgid "Incremental Rejection Percentage"
+msgstr ""
+"增量拒絕百分比"
+
+#: FUZZY.py:527 FUZZY.py:533 FUZZY.py:537
+msgid "Value"
+msgstr ""
+"值"
+
+#: FUZZY.py:528
+msgid "Tries is the number of match comparisons before drawing.  Rejection percentage shows the match rejection rate.  Rejections are attributed to the first variable in the BY list that causes rejection."
+msgstr ""
+"嘗試數是指在繪製之前的相符比較數目。拒絕百分比顯示相符的拒絕率。拒絕是由於 BY 清單中導致拒絕的第一個變數。"
+
+#: FUZZY.py:539
+msgid "Case Control Match Tolerances"
+msgstr ""
+"觀察值控制相符容差"
+
+#: FUZZY.py:540
+msgid "Match Variables"
+msgstr ""
+"相符變數"
+
+#: FUZZY.py:583
+msgid "Demander id variable not found, or it duplicates a name in the supplier dataset: %s"
+msgstr ""
+"找不到需求者 ID 變數，或它與供應商資料集中的名稱重複：%s"
+
+#: FUZZY.py:934
+msgid "Undefined variable in BY list: %s"
+msgstr ""
+"BY 清單中有未定義的變數：%s"
+
+#: FUZZY.py:955
+msgid "Distribution of Available Matches"
+msgstr ""
+"可用相符項的發佈"
+
+#: FUZZY.py:956
+msgid "Average matching cases available: %.2f"
+msgstr ""
+"平均可用相符觀察值：%.2f"
+
+
+
