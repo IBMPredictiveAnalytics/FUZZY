@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+<link rel="stylesheet" type="text/css" href="extsyntax.css" />
+<title>FUZZY Extension Command</title>
+
+
+</head>
+
+<body>
+<h1>FUZZY Extension Command</h1>
+
+<p>Match cases from two datasets based on one or more keys drawing randomly from matching cases.</p>
+
+<p>Note: the original version of this command was called CASECTRL.  FUZZY
+is a superset of that functionality.</p>
+<div class="syntax">
+<p>FUZZY DEMANDERDS = <em>dataset</em> SUPPLIERDS = <em>dataset</em> BY = <em>keys</em><sup>&#42;</sup>
+SUPPLIERID = <em>variable</em> NEWDEMANDERIDVARS = <em>variables</em><br/>
+GROUP = <em>variable</em><br/>
+FUZZ = <em>matching tolerances</em><br/>
+CUSTOMFUZZ = <em>user-written function for calculating match eligibility</em><br/>
+EXACTPRIORITY = TRUE<sup>&#42;</sup> or FALSE<br/>
+COPYTODEMANDER = <em>supplier variable names</em><br/>
+MATCHGROUPVAR = <em>variable</em> (default is &ldquo;matchgroup&rdquo;)<br/>
+DRAWPOOLSIZE = <em>variable</em><br/>
+DEMANDERID = <em>variable</em><br/>
+DS3 = <em>dataset</em></p>
+
+<p>/OPTIONS
+SAMPLEWITHREPLACEMENT=TRUE or FALSE<sup>&#42;&#42;</sup><br/>
+MINIMIZEMEMORY = TRUE<sup>&#42;&#42;</sup> or FALSE<br/>
+SHUFFLE = TRUE or FALSE<sup>&#42;&#42;</sup><br/>
+SEED = <em>number</em></p>
+
+<p>/OUTFILE LOGFILE=&ldquo;<em>filespec</em>&rdquo;&ldquo; LOGACCESSMODE=OVERWRITE<sup>&#42;&#42;</sup> or APPEND</p>
+
+<p>/HELP.</p>
+
+<p><sup>&#42;</sup> Required<br/>
+<sup>&#42;&#42;</sup> Default</p>
+</div>
+<p>FUZZY /HELP  prints this output and does nothing else.</p>
+
+<p>Example:</p>
+
+<pre class="example"><code>FUZZY DEMANDERDS=demand SUPPLIERDS = supply BY=agegroup gender
+SUPPLIERID = id NEWDEMANDERIDVARS=supplierId.
+</code></pre>
+
+<p>Example using a single input dataset (the active dataset):</p>
+
+<pre class="example"><code>FUZZY by=x1 supplierid = id newdemanderidvars=sid group=group
+drawpoolsize=drawpool.
+</code></pre>
+
+
+<pre class="example"><code>FUZZY DEMANDERDS=demander SUPPLIERDS=supplier
+BY=origin cylinder SUPPLIERID=id
+NEWDEMANDERIDVARS=matchedcaseid
+COPYTODEMANDER=mpg randomnumber randomstring
+DS3=dsextra DEMANDERID=demanderid.
+</code></pre>
+
+<p>FUZZY takes two datasets, a demander and a supplier or a single dataset with a 
+group identification variable.  It attempts to find a match for each
+demander case from the supplier dataset based on the variables named in BY.  If more than one 
+candidate matches, it picks randomly.  No sorting of either dataset is required.</p>
+
+<p>If using a single dataset, the <strong>DEMANDERDS</strong> and <strong>SUPPLIERDS</strong> keywords
+can be omitted.  The active dataset will be used.</p>
+
+<p>By default, a match is defined by identical values for all the <strong>BY</strong> variables.  A system-missing
+value prevents a case from being matched.  Fuzzy matching is also available for numeric variables.
+Specify FUZZ=list-of-matching tolerances.  There must be one fuzz value for each BY variable,
+listed in BY-value order.</p>
+
+<p>A tolerance is the maximum difference in either direction that is allowed for a match.  Thus,
+values of 1 and 2 would match if tolerance is 1 or more, and a tolerance of zero means an
+exact match on that variable.  You must use 0 for any string variable.  If <strong>FUZZ</strong> is used,
+rejection counts for each variable are show in the output.</p>
+
+<p>By default, with fuzzy matching, an exact match is first tried, and then a fuzzy match is tried.
+There is no attempt to get the closest fuzzy match, just a match within the tolerance.
+<strong>EXACTPRIORITY</strong> = FALSE causes all suppliers within the fuzz range to be considered equally.
+EXACTPRIORITY must be FALSE if MINIMIZEMEMORY is TRUE.</p>
+
+<p>Using EXACTPRIORITY may introduce a subtle artifact that may need to be considered in
+subsequent analysis.  While it will generally produce closer matches, cases with variable values 
+where candidates are scarce will tend to get matches that differ more than where candidates
+are abundant.</p>
+
+<p><strong>CUSTOMFUZZ</strong> can be used to substitute a user-written calculation for the
+built-in fuzzy calculation.  It should specify a Python module name and function
+as a quoted string, e.g. &quot;mymodule.fuzzycalc&rdquo;.  The function should return</p>
+
+<ul>
+<li>0 - no match</li>
+<li>1- fuzzy match.</li>
+<li>It coudl also return 2 (exact match).</li>
+</ul>
+
+<p>If the case comparison produced an exact match, this function is not called.
+The function signature should be
+<code>functionname(demander, supplier)</code><br/>
+where demander and supplier are lists of the BY variable values for the
+demander and supplier cases.
+Note that the function needs to deal with missing values (None) and may
+need to handle both string and numeric comparisons.
+The FUZZ subcommand is ignored if a customfuzz function is used.</p>
+
+<p>The <strong>DEMANDERDS</strong> and <strong>SUPPLIERDS</strong> values can be the same, indicating that all the data
+is in the same dataset.  In this case, <strong>GROUP</strong> must be used to distinguish the cases.
+<strong>GROUP</strong> names a variable that indicates which are demander cases and which supplier ones.
+A value of 1 indicates demander and 0 indicates supplier.  Any other values, including missing,
+cause the case to be ignored.</p>
+
+<p>This procedure builds some possibly large tables in memory, so it may not be appropriate for very
+large datasets.</p>
+
+<p>There are several output options.
+The <strong>ID</strong> or IDs of matching cases are appended to the demander dataset variables.  The number of
+variables listed as <strong>NEWDEMANDERIDVARS</strong> determines how many matches are attempted.  These variables
+must not already exist in the demander dataset.</p>
+
+<p>The variables in the supplier dataset that are listed in <strong>COPYTODEMANDER</strong> are copied to the 
+demander dataset as new variables or replacement values.  For existing variables, the types 
+must agree.  If no match is found, existing demander dataset values are not changed and new
+variable values will be sysmis or blank.</p>
+
+<p>COPYTODEMANDER cannot be used with GROUP.</p>
+
+<p>Only one NEWDEMANDERIDVARS may be specified if COPYTODEMANDER is used.<br/>
+None of the metadata such as variable and value labels is copied.  Use APPLY DICTIONARY 
+to bring over variable properties.</p>
+
+<p>If <strong>DS3</strong> is specified, a new dataset is created containing the cases in the supplier dataset actually 
+used for the matches.  It will be the active dataset after the command is run.<br/>
+DS3 cannot be used with GROUP.
+(This implies that any unnamed dataset will be closed.)
+It contains all the variables froom the supplier dataset plus the <strong>MATCHGROUPVAR</strong>.
+If DEMANDERID is specified, it also contains the ID variable from the demander dataset.  These 
+variable names must all be unique.
+DS3 is only a dataset: use the SAVE command to turn it into a file.</p>
+
+<p><strong>DRAWPOOLSIZE</strong> can name a variable for the demander dataset that will record the
+number of cases in the supplier dataset that are eligible to match the demander case.
+This can be useful in identifying the types of cases in terms of BY variables where
+the supplier pool is thin.  The variable must not already exist in the demander dataset.</p>
+
+<h2>OPTIONS</h2>
+
+<p>By default, sampling from the supplier dataset is done without replacement.  Specify
+<strong>SAMPLEWITHREPLACEMENT</strong>=TRUE to sample with replacement.</p>
+
+<p>By default, memory usage is minimized in picking supplier dataset candidate match cases
+(all eligible cases have an equal probability of selection).  This requires an extra data pass.  If
+the possible number of matching cases for a demander case is small or the supplier dataset is
+not large, specifying
+<strong>MINIMIZEMEMORY</strong>=FALSE may improve performance by eliminating the extra data pass.  In the
+case of 1-1 matching, this is recommended.
+MINIMIZEMEMORY=TRUE cannot be combined with EXACTPRIORITY=TRUE.</p>
+
+<p>When MINIMIZEMEMORY=TRUE, each supplier case is eligible for assignment at random 
+to just one demander case for which it is within tolerance.  When FALSE, the case is 
+eligible for all cases within the tolerance, and one is picked at random from all of those.
+This means that when TRUE, a usually small number of demander cases may go unmatched
+when a match could have been found, but when FALSE, the matching tables can become
+very large, especially in the PSM case.</p>
+
+<p>By default, cases in the demander dataset are processed in case order.  If there are insufficient 
+supplier cases, you may specify <strong>SHUFFLE</strong>=TRUE to process the demander cases in random order.
+This ensures that earlier cases do not have an advantage over later ones in matching.<br/>
+SHUFFLE increases the memory requirement and will take longer to execute.</p>
+
+<p>Use <strong>SEED</strong>=number to set the random number generator to a known state for repeatability.</p>
+
+<h2>OUTFILE</h2>
+
+<p>Matching can be quite time consuming.  Progress can be logged to a file during the run.
+Specify a file/path as <strong>LOGFILE</strong>=&ldquo;filespec&rdquo; to record progress.
+If <strong>LOGACCESSMODE</strong> is OVERWRITE, each run overwrites an existing file.  APPEND
+appends to the log file.
+The contents record the state the process has reached and writes the number of operations
+completed at 1000 or 5000 case intervals for some operations.</p>
+
+<p>&copy; Copyright IBM Corp. 1989, 2014</p>
+
+</body>
+
+</html>
+
