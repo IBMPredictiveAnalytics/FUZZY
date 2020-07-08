@@ -1,10 +1,10 @@
-from __future__ import with_statement
+
 
 #match cases in a dataset with those in a second dataset agreeing on all the key variables.
 
 #Licensed Materials - Property of IBM
 #IBM SPSS Products: Statistics General
-#(c) Copyright IBM Corp. 2009, 2014
+#(c) Copyright IBM Corp. 2009, 2020
 #US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 
 # The function accepts two or three datasets.
@@ -209,14 +209,14 @@ NEWDEMANDERIDVARS=matchedcaseid
 COPYTODEMANDER=mpg randomnumber randomstring
 DS3=dsextra DEMANDERID=demanderid.
 """
-    
+
 #def xRun():
 def Run(args):
     """Run the casectrl function as SPSS syntax"""
     
     ###print args   #debug
     ###args = xargs
-    args = args[args.keys()[0]]
+    args = args[list(args.keys())[0]]
     
     oobj = Syntax([
     Template("DEMANDERDS", subc="", var="demanderds", ktype="varname"),
@@ -240,7 +240,7 @@ def Run(args):
     Template("LOGFILE", subc="OUTFILE", var="logfile", ktype="literal"),
     Template("ACCESSMODE", subc="OUTFILE", var="logaccessmode", ktype="str", vallist=("append", "overwrite"))
     ])
-    
+
     #enable localization
     global _
     try:
@@ -249,12 +249,12 @@ def Run(args):
         def _(msg):
             return msg
 
-    if args.has_key("HELP"):
+    if "HELP" in args:
         #print helptext
         helper()
     else:
         processcmd(oobj, args, casecontrol, vardict=spssaux.VariableDict())
-        
+
 #import cProfile
 
 #def Run(args):
@@ -271,14 +271,14 @@ class DataStep(object):
             spss.Submit("EXECUTE")
             spss.StartDataStep()
         return self
-    
+
     def __exit__(self, type, value, tb):
         spss.EndDataStep()
         return False
 
 def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, group=None,
-                copytodemander=[], ds3=None,  demanderid=None, samplewithreplacement=False, 
-                hashvar="matchgroup", seed=None, shuffle=False, minimizememory=True, 
+                copytodemander=[], ds3=None,  demanderid=None, samplewithreplacement=False,
+                hashvar="matchgroup", seed=None, shuffle=False, minimizememory=True,
                 fuzz=None, exactpriority=True, drawpool=None, customfuzz=None,
                 logfile=None, logaccessmode="overwrite"):
     """Find match for demanderds cases in supplierds and add identifiers to demanderds.  Return unmatched count. 
@@ -322,7 +322,7 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
         ##    ###SpssClient._heartBeat(False)
     #except:
         #print 'import failed'
-    
+
     if not seed is None:
         random.seed(seed)
 
@@ -348,27 +348,27 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
     copytodemander = spssaux._buildvarlist(copytodemander)
     if nmatches > 1 and len(copytodemander) > 0:
         raise ValueError(_("Error: variables can only be copied to the demander dataset if only a single match is requested"))
-    
+
     if len(set([v.lower() for v in matchslots])) != nmatches or nmatches == 0:
         matchslots = ", ".join(matchslots)
-        if not isinstance(matchslots, unicode):
-            matchslots = unicode(matchslots, myenc)
+        if not isinstance(matchslots, str):
+            matchslots = str(matchslots, myenc)
         raise ValueError(_("Match id variable names are not unique or none was specified\n") + matchslots)
-    
+
     if fuzz is not None and len(fuzz) != len(by):
         raise ValueError(_("List of fuzz values does not match list of BY variables.  Fuzz: %s") % fuzz)
-    
+
     if fuzz and exactpriority:
         if minimizememory:
             # not translated
-            print "Fuzzy matching with exactpriority cannot be combined with minimizememory.  Setting minimizememory to NO."
+            print("Fuzzy matching with exactpriority cannot be combined with minimizememory.  Setting minimizememory to NO.")
         mimimizememory = False
     if minimizememory and samplewithreplacement:
-        print _("""Samping with replacement cannot be used with minimize memory.  Using sampling without replacement""")
+        print(_("""Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"""))
         samplewithreplacement = False
-    
+
     nomatchcount = 0
-    
+
     with DataStep():
         demanderdsx = spss.Dataset(demanderds)
         if demanderds != supplierds:
@@ -389,8 +389,8 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
             supplieridindex = supplierds.varlist[supplierid].index
             idtype= supplierds.varlist[supplierid].type
         except:
-            if not isinstance(supplierid, unicode):
-                supplierid = unicode(supplierid, myenc)
+            if not isinstance(supplierid, str):
+                supplierid = str(supplierid, myenc)
             raise ValueError(_("Supplier dataset id variable not found: %s") % supplierid)
         for v in matchslots:
             demanderds.varlist.append(v, idtype)
@@ -401,7 +401,7 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
         else:
             dsextra = None
             lends3 = 0
-        if not demanderid is None:
+        if demanderid is not None:
             demanderidindex = demanderds.varlist[demanderid].index
         else:
             demanderidindex = None
@@ -409,7 +409,7 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
             groupindex = demanderds.varlist[group].index
         else:
             groupindex = None
-        
+
         # create new variables and warn if type mismatch for existing variables.  No metadata is copied.
         demandercopyindexes = []
         suppliercopyindexes = []
@@ -422,8 +422,8 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
                 try:
                     svtype = supplierds.varlist[sv].type   # will cause exception if variable does not exist in supplierds
                 except:
-                    if not isinstance(sv, unicode):
-                        sv = unicode(sv, myenc)
+                    if not isinstance(sv, str):
+                        sv = str(sv, myenc)
                         raise ValueError(_("Supplier dataset variable not found: %s") % sv)
                 if not sv in demandervars:
                     demanderds.varlist.append(sv, svtype)
@@ -435,32 +435,32 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
                 copyvartypes.append(svtype)
             if typeconflicts:
                 typeconflicts = ",".join(typeconflicts)
-                if not isinstance(typeconflicts, unicode):
-                    typeconflicts = unicode(typeconflicts, myenc)
+                if not isinstance(typeconflicts, str):
+                    typeconflicts = str(typeconflicts, myenc)
                 raise ValueError(_("Error: supplier/demander type conflicts exist for variables: ") + typeconflicts)
-    
-        matcher = Matcher(by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement, 
+
+        matcher = Matcher(by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement,
             minimizememory, fuzz, exactpriority, groupindex, customfuzz)
-    
+
         # First pass the demander dataset to establish all required matches.  
         # If minimizing memory, pass the supplier dataset to count cases for each required key.
         # Then pass the supplier dataset to develop the candidates.  If minimizing memory, only as many
         # suppliers will be recorded for a key as needed with all eligible cases given equal probability of selection.
         # Finally pass the demander dataset and harvest the matches.
-        
+
         demanderdscases = demanderds.cases
         supplierdscases = supplierds.cases
-        
+
         demanderdssize = len(demanderdscases)
         supplierdssize = len(supplierdscases)
-        
+
         logger = Logger(logfile=logfile, accessmode=logaccessmode)
-        
+
         logger.info("Adding demanders")
         addcount = 0
-        for i in xrange(demanderdssize):
+        for i in range(demanderdssize):
             if i%5000 == 4999:
-                logger.info("Cumulative demanders added = %s" % addcount)            
+                logger.info("Cumulative demanders added = %s" % addcount)
             addcount += matcher.adddemander(demanderdscases[i])
         logger.info("Done adding demanders.  Number added = %s" % addcount)
 
@@ -471,39 +471,38 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
                     #logger.info("Potential suppliers counted = %s" % i)
                 #matcher.countsuppliers(supplierdscases[i])
             #logger.info("Done counting suppliers")
-            
+
         logger.info("Adding suppliers.  suppliersize = %s (for single dataset usage, this is the total casecount)" % supplierdssize)
         addcount = 0
-        matchmaker = Matchmaker(demanderdscases, matcher, hashvarindex, supplierdscases, dsextra, 
+        matchmaker = Matchmaker(demanderdscases, matcher, hashvarindex, supplierdscases, dsextra,
             demandercopyindexes, suppliercopyindexes, demanderidindex, drawpoolindex, supplieridindex, group)
         matcher.domatch = matchmaker.do
-        for i in xrange(supplierdssize):
+        for i in range(supplierdssize):
             if i%1000 == 999:
                 logger.info("Cumulative potential suppliers processed = %s.  Supplier adds = %s" % (i,addcount))
             addcount += matcher.addsupplier(supplierdscases[i], i)
         logger.info("Done adding suppliers.  Number added: %s.  A supplier may be added to more than one demander." % addcount)
-            
+
         logger.info("Making matches.  Demandersize = %s" % demanderdssize)
 
-            
         if not shuffle:
-            for i in xrange(demanderdssize):
-                if i%1000 == 999:
+            for i in range(demanderdssize):
+                if i % 1000 == 999:
                     logger.info("Cumulative matches = %s, nomatch Count = %s" % (i, nomatchcount))
                 nomatchcount += matchmaker.do(i)
         else:
-            caselist = range(demanderdssize)
+            caselist = list(range(demanderdssize))
             random.shuffle(caselist)
             for i in caselist:
                 if i%1000 == 999:
-                    logger.info("Cumulative matches = %s, nomatch count = %s" % (i,  nomatchcount))                
+                    logger.info("Cumulative matches = %s, nomatch count = %s" % (i,  nomatchcount))
                 nomatchcount += matchmaker.do(i)
         logger.info("Done matching.  Displaying results")
-                
+
     if ds3:
         spss.Submit(r"""DATASET ACTIVATE %(dsextraname)s.
         DATASET NAME %(ds3)s""" % locals())
-        
+
     StartProcedure(_("Case-control matching"), "SPSSINC CASECTRL")
 
     tbl = spss.BasePivotTable(_("Case Control Matching Statistics"), "CASECTRLSTATS")
@@ -547,9 +546,9 @@ Rejections are attributed to the first variable in the BY list that causes rejec
         matcher.freqs.showtable()
     spss.EndProcedure()
     logger.done()
-    
+
     return nomatchcount
-   
+
 
 def createds3(dsin, dsout, hashvar, demanderds, demanderid, supplierid, myenc, group, drawpool):
     """Create a new dataset by copying the variables in dsin to dsout.  No cases are created.
@@ -560,18 +559,18 @@ def createds3(dsin, dsout, hashvar, demanderds, demanderid, supplierid, myenc, g
     if demanderid is not None, its definition from demanderds is appended to dsout.
     If using group, the demanderid name is suffixed with "_", since it would always duplicate
     the supplierid name."""
-    
+
     for v in dsin.varlist:
         if v.name != drawpool:
             dsout.varlist.append(v.name, v.type)
-        
+
     # ugly!
-    unicodemode = isinstance(dsout.varlist[0].name, unicode)
-    if unicodemode and not isinstance(hashvar, unicode):
-        hashvar = unicode(hashvar, myenc)
-    if demanderid is not None and unicodemode and not isinstance(demanderid, unicode):
-        demanderid = unicode(demanderid, myenc)
-        
+    unicodemode = isinstance(dsout.varlist[0].name, str)
+    if unicodemode and not isinstance(hashvar, str):
+        hashvar = str(hashvar, myenc)
+    if demanderid is not None and unicodemode and not isinstance(demanderid, str):
+        demanderid = str(demanderid, myenc)
+
     if hashvar not in [v.name for v in dsout.varlist]:
         dsout.varlist.append(hashvar, 0)
 
@@ -579,15 +578,15 @@ def createds3(dsin, dsout, hashvar, demanderds, demanderid, supplierid, myenc, g
         try:
             dsout.varlist.append(demanderid, demanderds.varlist[demanderid].type)
         except:
-            if not isinstance(demanderid, unicode):
-                demanderid = unicode(demanderid, myenc)
+            if not isinstance(demanderid, str):
+                demanderid = str(demanderid, myenc)
             raise ValueError(_("Demander id variable not found, or it duplicates a name in the supplier dataset: %s") % demanderid)
     return len(dsout.varlist)
 
 class Matchmaker(object):
     """Use the Matcher class data structures to draw matches and propagate data as required"""
-    
-    def __init__(self, demanderdscases, matcher, hashvarindex, supplierdscases, ds3cases, 
+
+    def __init__(self, demanderdscases, matcher, hashvarindex, supplierdscases, ds3cases,
                  demandercopyindexes, suppliercopyindexes,
                  demanderidindex, drawpoolindex, supplieridindex, group):
         """demanderdscases is the demander case to match.
@@ -599,15 +598,15 @@ class Matchmaker(object):
         
         If ds3cases is not None, supplier dataset cases used are written to ds3cases
         if demanderidindex is not None and ds3 is being created, its value is copied to ds3."""
-        
+
         attributesFromDict(locals())
-    
+
     def do(self, casenumber):
         """draw match(es) for case casenumber and propagate values as required"""
-        
+
         if self.matcher.groupindex != None and self.demanderdscases[casenumber][self.matcher.groupindex] != 1:
             return 0
-        
+
         hash, matches, drawpoolsize = self.matcher.draw(self.demanderdscases[casenumber], self.supplierdscases)  # 3/1
         self.demanderdscases[casenumber, self.hashvarindex] = hash
         if self.drawpoolindex:
@@ -615,25 +614,25 @@ class Matchmaker(object):
         for m in range(len(matches)):
             casenum = matches[m][0]    # case number of the supplier dataset
             self.demanderdscases[casenumber, self.hashvarindex + 1 + m] = matches[m][1]
-    
-            if not casenum is None:
-                for dv , sv in zip(self.demandercopyindexes, self.suppliercopyindexes):
+
+            if casenum is not None:
+                for dv, sv in zip(self.demandercopyindexes, self.suppliercopyindexes):
                     self.demanderdscases[casenumber,dv] = self.supplierdscases[casenum, sv]
-                
-            # ds3 will contain the complete supplier case + hash value + optional demanderid 
+
+            # ds3 will contain the complete supplier case + hash value + optional demanderid
             if self.ds3cases:
-                if not casenum is None:
+                if casenum is not None:
                     self.ds3cases.cases.append(self.supplierdscases[casenum])
                     if self.group:
-                        self.ds3cases.cases[-1,-2] = hash
+                        self.ds3cases.cases[-1, -2] = hash
                         self.ds3cases.cases[-1, -1] = self.demanderdscases[casenumber, self.supplieridindex]
                     else:
-                        if not self.demanderidindex is None:
-                            self.ds3cases.cases[-1,-2] = hash
+                        if self.demanderidindex is not None:
+                            self.ds3cases.cases[-1, -2] = hash
                             self.ds3cases.cases[-1, -1] = self.demanderdscases[casenumber, self.demanderidindex]
                         else:
-                            self.ds3cases.cases[-1,-1] = hash
-        
+                            self.ds3cases.cases[-1, -1] = hash
+
         # return count of unmatched demands where demander by do not have missing or blank
         if hash is None:
             return 0
@@ -642,8 +641,8 @@ class Matchmaker(object):
 
 class Matcher(object):
     """Build, maintain, and draw from hash lists for cases"""
-    
-    def __init__(self, by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement, minimizememory, 
+
+    def __init__(self, by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement, minimizememory,
         fuzz, exactpriority, groupindex, customfuzz):
         """by is a variable or list of variables to match on.
         supplierid is the id variable name in the supplier dataset.
@@ -655,7 +654,7 @@ class Matcher(object):
         If exactpriority, exact matches get preference over fuzzy matches when fuzzy matching allowed.
         
         A DataStep is expected to be active for this class."""
-        
+
         """The demander object is a dictionary whose keys are the hash of the by variable(s).
         The values are lists of matching suppliers with each list item being a duple (casenumber, idvalue)"""
         self.demanders = {}
@@ -681,7 +680,7 @@ class Matcher(object):
             self.customfuzz = getattr(sys.modules[customparts[0]], customparts[1])
         else:
             self.customfuzz = None
-        
+
         # if fuzzy matching, keep count of tries incremental rejections overall and by variable
         if fuzz:
             self.tries = dict((i,0) for i in range(len(fuzz)+1))
@@ -695,10 +694,10 @@ class Matcher(object):
         self.exactcount = {}         # used in fuzzy matching to give priority to exact matches
         self.counts=[0,0,0]          # counts of exact, fuzzy, and unmatched cases
         self.usedsuppliers = set() # for sample wout replacement, tracks supplier cases used (case number)
-                
+
     def adddemander(self, case):
         """Add a demander.  Return 0 or 1 for whether added or not"""
-        
+
         if self.groupindex != None and case[self.groupindex] != 1:
             return 0
         h, keyvalues = self.hash(self.demandervars, case)
@@ -710,18 +709,18 @@ class Matcher(object):
             self.demandercount[h] = self.demandercount.get(h, 0) + self.nmatches  # 5/28/09
             self.demanderscopy.add(h)
         return 1
-            
+
     #def countsuppliers(self, case):
         #"""If minimizing memory, count suppliers for this key.
         #This can be very timeconsuming if using fuzzy matching.
-        
+
         #case is a supplier case.
         #This routine should not be called unless minimizememory is True"""
-        
+
         ##if self.fuzz:
         ##    h = self.fuzzhash(self.suppliervars, case, self.demanders.get(dhash, None))
         #if self.groupindex != None and case[self.groupindex] != 0:
-            #return        
+            #return
         #if not (self.fuzz or self.customfuzz):
             #h, values = self.hash(self.suppliervars, case)
             #if h in self.demanders:
@@ -731,7 +730,7 @@ class Matcher(object):
                 #hh = self.rehash(h, case)
                 #if hh > 0:
                     #self.suppliercount[h] = self.suppliercount.get(h, 0) + 1
-        
+
     def addsupplier(self,  case, casenum):
         """Add a supplier.  If no demander for this case, do nothing.
         
@@ -748,7 +747,7 @@ class Matcher(object):
                     self.demanders[h].append((casenum, case[self.supplierid]))
                     takecount += 1
                 else:
-                    if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:  
+                    if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:
                         self.demanders[h].append((casenum, case[self.supplierid]))
                         takecount += 1
                     #if self.suppliercount[h] > 0:
@@ -784,7 +783,7 @@ class Matcher(object):
                     if shortfall > 0:
                         hlist.append(h)
                         break
-                    #if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:  
+                    #if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:
                         #hlist.append(h)
                         #demanders.remove(h)
                         #break   # stop as soon as one demander is found
@@ -795,7 +794,7 @@ class Matcher(object):
                 self.demanders[winner].append((casenum, case[self.supplierid]))
                 takecount = 1
         return takecount
-                    
+
     def rehash(self, h, case):
         """Test supplier case against demander case allowing for fuzzy matching.
         
@@ -806,7 +805,6 @@ class Matcher(object):
         -  1 if fuzzy match
         -  2 if exact match
         """
-        
 
         hh, values = self.hash(self.suppliervars, case)   # first see if exact match
         self.tries[0] += 1
@@ -835,11 +833,11 @@ class Matcher(object):
         h is the demander hash
         If samplewithreplacement is False, any suppliers already used are removed and the exactcount
         field is adjusted"""
-    
+
         thelist = self.demanders.get(h, ()) #initial list not accounting for suppliers used for other demanders
         if self.samplewithreplacement:
             return thelist
-        
+
         exactcount = self.exactcount.get(h, 0)
         lenthelist = len(thelist)
         for j in range(lenthelist, 0, -1):
@@ -859,9 +857,9 @@ class Matcher(object):
         If using fuzzy matching and exact matches get priority, an exact match is first attempted and if not available, a fallback
         to a fuzzy match is attempted.
         """
-        
+
         if self.groupindex != None and case[self.groupindex] != 1:
-            return None, [(None, None)], None        
+            return None, [(None, None)], None
         h, values = self.hash(self.demandervars, case)
         # get eligibles.  If sampling without replacement, previously used cases are removed.
         thelist = self.filteredlist(h)
@@ -870,8 +868,8 @@ class Matcher(object):
         listsize = len(thelist)
         initiallistsize = listsize  # tallying only for full list.  If multiple draws requested per case, actual would shrink
         self.freqs.accumulate(initiallistsize)
-        
-        for i in xrange(self.nmatches):
+
+        for i in range(self.nmatches):
             if listsize == 0:
                 draws.append((None, None))
                 self.counts[2] += 1
@@ -903,32 +901,32 @@ class Matcher(object):
                 if shash == h:
                     self.counts[0] += 1
                 else:
-                    self.counts[1] += 1  
+                    self.counts[1] += 1
         return h, draws, initiallistsize
-        
+
     def hash(self, indexes, case):
         """Return a hash of the case according to the indexes in the indexes tuple and the key values.
         
         If any value in the index is None or, for strings, blank, the result is None, None
         indexes is the list of indexes into the case vector"""
-        
+
         keys = tuple([case[v] for v in indexes])
         for v in keys:
-            if isinstance(v, basestring):
+            if isinstance(v, str):
                 if v.rstrip() == "":
                     return None, None
             else:
                 if v is None:
                     return None, None
-            
+
         return hash(keys), keys  # keys for fuzzy matching
-        
+
     def buildvars(self, ds, by):
         """return a tuple of variable indexes for by.
         
         ds is the dataset.
         by is a sequence of variables for matching"""
-        
+
         try:
             return tuple([ds.varlist[v].index for v in by])
         except:
@@ -939,7 +937,7 @@ class Freqs(object):
         self.drawcount = 0
         self.sum = 0
         self.bucket = dict([(i,0) for i in range (13)])
-        
+
     def accumulate(self, listsize):
         # maintain the distribution of cases to draw from
         self.drawcount +=1
@@ -949,9 +947,9 @@ class Freqs(object):
         elif listsize == 1:
             bucket = 1
         else:
-            bucket = min((listsize + 9)/10 + 1, 12)
+            bucket = min((listsize + 9)//10 + 1, 12)
         self.bucket[bucket] += 1
-        
+
     def showtable(self):
         tbl = spss.BasePivotTable(_("Distribution of Available Matches"), "CASECTRLAVAIL",
             caption = _("Average matching cases available: %.2f") % (float(self.sum)/self.drawcount))
@@ -967,36 +965,37 @@ class Freqs(object):
             rowlabels=rowlabels,
             coldim="",
             collabels = [_("Count")],
-            cells = cells)            
-            
+            cells = cells)
+
 def diff(x, y):
     """Return absolute difference between x and y, assumed to be of the same basic type
     
     if numeric and neither is missing (None), return ordinary absolute value
     if not numeric, return 0 if identical and not blank.
     Otherwise return BIG."""
-    
+
     BIG = 1e100
-    
+
     try:
         return abs(x - y)
     except:
-        if isinstance(x, basestring):
+        if isinstance(x, str):
             x = x.rstrip()
             y = y.rstrip()
             if x == y and x != "":
                 return 0
         return BIG
 
-    
+
 def attributesFromDict(d):
     """build self attributes from a dictionary d."""
-    
+
     # based on Python Cookbook, 2nd edition 6.18
-    
+
     self = d.pop('self')
-    for name, value in d.iteritems():
+    for name, value in d.items():
         setattr(self, name, value)
+
 
 def StartProcedure(procname, omsid):
     """Start a procedure
@@ -1009,12 +1008,12 @@ def StartProcedure(procname, omsid):
     
     While the spss.StartProcedure function accepts the one argument, this function
     requires both."""
-    
+
     try:
         spss.StartProcedure(procname, omsid)
     except TypeError:  #older version
         spss.StartProcedure(omsid)
-        
+
 class Logger(object):
     """Manage logging"""
     def __init__(self, logfile, accessmode):
@@ -1022,7 +1021,7 @@ class Logger(object):
         
         logfile is the path and name for the log file or None
         accessmode is "overwrite" or "append" """
-        
+
         self.logfile = logfile
         if logfile is not None:
             filemode = accessmode == "overwrite" and "w" or "a"
@@ -1030,13 +1029,13 @@ class Logger(object):
                 format="%(asctime)s: %(message)s", datefmt="%H:%M:%S")
             logging.info("Run started: %s" % time.asctime())
             self.starttime = time.time()   # start time as seconds
-            
+
     def info(self, message):
         """Add message to the log if logging"""
-        
+
         if self.logfile:
             logging.info(message)
-            
+
     def done(self):
         if self.logfile:
             logging.info("Run ended.  Elapsed time (minutes) = %.3f", (time.time() - self.starttime)/60)
@@ -1046,17 +1045,17 @@ def helper():
     """open html help in default browser window
     
     The location is computed from the current module name"""
-    
+
     import webbrowser, os.path
-    
+
     path = os.path.splitext(__file__)[0]
     helpspec = "file://" + path + os.path.sep + \
          "markdown.html"
-    
+
     # webbrowser.open seems not to work well
     browser = webbrowser.get()
     if not browser.open_new(helpspec):
-        print("Help file not found:" + helpspec)
+        print(("Help file not found:" + helpspec))
 try:    #override
     from extension import helper
 except:
