@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <title>Coincidencia de control de casos</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <p>Este procedimiento hace coincidir casos (consumidores) y controles (proveedores) incluidos en un solo conjunto de datos. La coincidencia se basa en una igualdad aproximada o exacta de una o más variables de coincidencia.</p>
+
+  <p>Para cada caso en el grupo de consumidor o caso, se intenta una coincidencia con casos del grupo de proveedor o control. El id del caso o casos del proveedor seleccionado, si se solicitan varias coincidencias, se graba como una o más variables nuevas.</p>
+
+  <p><span class="runinhead">Variables para coincidir</span> Seleccione una o más variables para coincidir. No es necesario clasificar el conjunto de datos por estas variables.</p>
+
+  <p><span class="runinhead">Tolerancias de coincidencia</span> Si las variables de coincidencia para los casos de consumidor y proveedor deben ser exactamente iguales, deje este control vacío. Si se desea algo de tolerancia o "fuzz", entre el valor de tolerancia para cada una de las variables de coincidencia. Utilice cero para una coincidencia exacta. Debe haber tantos valores entrados, separados por un espacio, como variables de coincidencia.</p>
+
+  <p class="bullet">• Las variables de cadena deben tener un valor de tolerancia de cero.</p>
+
+  <p><span class="runinhead">Indicador de grupo</span> Especifique la   variable que distingue los casos de consumidor y proveedor. Un valor de   1 indica un caso de consumidor, y un valor de 0 indica un proveedor. Cualquier otro valor, incluidos los perdidos, hará que se ignore el caso.</p>
+
+  <p><span class="runinhead">ID de caso</span> Especifique una variable de identificador de caso. El valor de id de caso para los proveedores seleccionados se almacenará con cada caso de consumidor.</p>
+
+  <p><span class="runinhead">Nombres para las variables de ID de coincidencia</span>   Especifique un nombre para la variable que contendrá el id del caso del proveedor seleccionado. Se pueden especificar varios nombres, separados por un espacio en blanco. El número de casos de proveedor para cada consumidor se determina mediante el número de nombres de variable entrados aquí. Si no se puede producir una coincidencia, el valor será un valor perdido del sistema.</p>
+
+  <p class="bullet">• Los nombres de variable listados no deben existir en el conjunto de datos.</p>
+
+  <p><span class="runinhead">Nombre para variable de grupo de coincidencia</span>   Entre un nombre para la variable de grupo de coincidencia. Esta variable contendrá un código que indica el conjunto de casos de proveedor elegibles. El propio valor no es significativo, pero dos casos con el mismo valor tienen el mismo conjunto de casos de proveedor elegibles.</p>
+
+  <p class="bullet">• El nombre de variable listado no debe existir en el conjunto de datos.</p>
+
+  <h2>Opciones</h2>
+
+  <p><span class="runinhead">Variable para número de casos elegibles</span> De forma opcional, entre un nombre de variable para registrar el tamaño de la agrupación, es decir, el número de casos elegibles, para cada caso de consumidor. Este es el número de casos que cumplen los criterios de coincidencia después de que hayan eliminado las coincidencias para casos anteriores, si el muestreo es sin sustitución.</p>
+
+  <p class="bullet">• El nombre de variable listado no debe existir en el conjunto de datos.</p>
+
+  <p><span class="runinhead">Muestreo</span> Los casos de proveedor se pueden trazar con o sin sustitución. Indique la opción que desee.</p>
+
+  <p><span class="runinhead">Dar prioridad a coincidencias exactas</span>   Marque este recuadro para hacer que el algoritmo de coincidencia intente primero una coincidencia exacta antes de intentar una coincidencia inexacta.</p>
+
+  <p><span class="runinhead">Maximizar rendimiento de ejecución</span>   Marque este recuadro para maximizar el rendimiento deejecución, mayor velocidad y menor uso de memoria. Marcar esto podría aumentar ligeramente el número de casos no coincidentes, pero para conjuntos de datos grandes, la mejora del rendimiento puede ser muy significativa. Algunos de los estadísticos de resultado no se aplican, porque el procedimiento no acumula datos sobre las posibles coincidencias.</p>
+
+  <p class="bullet">• No puede especificar prioridad exacta y minimizar memoria a la vez.</p>
+
+  <p><span class="runinhead">Aleatorizar el orden de casos al trazar coincidencias</span> Marque esto para trazar coincidencias para los casos de consumidor en orden aleatorio. De lo contrario, los casos de consumidor se procesan en el orden en el que se producen en el archivo. Esto podría generar que se seleccionen menos casos posteriormente en el archivo. Si los casos de consumidor tienen un orden sistemático, esto podría introducir algún sesgo.</p>
+
+  <p><span class="runinhead">Semilla de aleatorización</span> Si desea poder reproducir las coincidencias de forma exacta en una futura ejecución con los mismos datos, puede definir un valor de semilla para los números aleatorios utilizados al seleecionar en un conjunto de forma aleatoria. Esta semilla no está relacionada con la semilla de aleatorización general de SPSS Statistics.</p>
+
+  <h2>Salida adicional</h2>
+
+  <p><span class="runinhead">Conjunto de datos de resultados adicional</span> Marque este recuadro y entre un nombre de conjunto de datos para poder crear un nuevo conjunto de datos que contenga las coincidencias. El nuevo conjunto de datos contendrá todas las variables para cada caso de proveedor que se asignó a un caso de consumidor seguido por la variable de grupo de coincidencias y el id del caso de consumidor al que se asignó el caso.</p>
+
+  <p class="bullet">• Si utiliza esta opción, sólo se puede asignar un caso de proveedor a cada caso de consumidor. Es decir, el campo Nombres para las variables ID de coincidencia en el diálogo principal sólo puede contener un nombre.</p>
+
+  <h2>Características adicionales</h2>
+
+  <p>Este diálogo genera sintaxis para el comando de extensión FUZZY.
+  Para mostrar la ayuda de sintaxis de este comando, ejecute la siguiente sintaxis:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY tiene un número de características no soportadas en este diálogo, que incluye el uso de conjuntos de datos de caso y control separados como entrada.
+  Las funciones personalizadas grabadas en Python también se pueden utilizar para calcular la distancia aproximada. En la sintaxis, puede crear un archivo de registro que registra el progreso a medida que se ejecuta el procedimiento. Esto puede ser muy útil en grandes problemas.</p>
+
+  <h2>Requisitos</h2>Este comando requiere Python Essentials y, como mínimo, una versión 18 de IBM SPSS Statistics. Para el uso de un solo conjunto de datos, puede ser necesario Statistics versión 21 o un arreglo dinámico para la versión 20. Puede descargar Python Essentials desde el sitio web de   SPSS Community en   www.ibm.com/developerworks/spssdevcentral.<br>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>
