@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<title>个案控制匹配</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <p>此过程将单个数据集中包含的个案（请求者）与控制项（供应者）进行匹配。此匹配基于一个或多个匹配变量的近似等同性或精确等同性。</p>
+
+  <p>对于请求者或个案组中的每个个案，将尝试使其与供应者或控制组中的个案匹配。如果请求进行多项匹配，那么一个或多个所选供应者个案的 ID 将写为一个或多个新变量。</p>
+
+  <p><span class="runinhead">匹配依据变量</span> 请选择一个或多个要作为匹配依据的变量。数据集不必按这些变量进行排序。</p>
+
+  <p><span class="runinhead">匹配容差</span> 如果请求者个案和供应者个案的匹配变量必须完全相等，请保留此控件为空。如果需要一定程度的容差或“模糊”，请为每个匹配变量输入容差值。如果要进行完全匹配，请输入零。输入值的数目必须与匹配变量数相同相同，并以空格进行分隔。</p>
+
+  <p class="bullet">• 字符串变量的容差值必须为零。</p>
+
+  <p><span class="runinhead">组指示符</span> 指定一个变量，用于区分请求者个案和供应者个案。值为 1 表示请求者个案，值为 0 表示供应者个案。任何其他值（包括缺失值）都将导致个案被忽略。</p>
+
+  <p><span class="runinhead">个案 ID</span> 请指定个案标识变量。所选供应者的个案 ID 值将与各个请求者个案存储在一起。</p>
+
+  <p><span class="runinhead">匹配 ID 变量名</span> 指定一个变量名，此变量用于存放所选供应者个案的 ID。可以输入多个以空格分隔的名称。每个请求者的供应者个案数由此处输入的变量名数目确定。如果无法产生匹配，那么值将为系统缺失值。</p>
+
+  <p class="bullet">• 列示的变量名不能是数据集中已存在的名称。</p>
+
+  <p><span class="runinhead">匹配组变量名</span> 请输入匹配组变量的名称。此变量用于存放一个代码，该代码指示合格供应者个案的集合。值本身不具意义，但值相同的两个个案将具有同一组合格供应者个案。</p>
+
+  <p class="bullet">• 列示的变量名不能是数据集中已存在的名称。</p>
+
+  <h2>选项</h2>
+
+  <p><span class="runinhead">合格个案数变量</span> 您可以选择性地输入一个变量名，用于记录每个请求者个案的池大小（即，合格个案数）。这是在进行不放回式抽样的情况下，除去先前个案的匹配项后满足匹配条件的个案数。</p>
+
+  <p class="bullet">• 列示的变量名不能是数据集中已存在的名称。</p>
+
+  <p><span class="runinhead">抽样</span> 可以在放回或不放回的情况下抽取供应者个案。请指示所需的选项。</p>
+
+  <p><span class="runinhead">优先考虑完全匹配</span> 选中此框后，匹配算法将先尝试完全匹配，然后再尝试模糊匹配。</p>
+
+  <p><span class="runinhead">最优化执行性能</span> 选中此框可以最大限度提高执行性能 -
+速度最快，内存使用量最少。选中此项可能会使不匹配个案数稍有增加，但对于大型数据集而言，性能方面的改进可能十分显著。由于此过程不会累积有关所有可能匹配项的数据，因此某些输出统计不适用。</p>
+
+  <p class="bullet">• 不能既指定优先考虑完全匹配，又指定最大限度降低内存使用量。</p>
+
+  <p><span class="runinhead">抽取匹配项时随机排列个案顺序</span>
+选中此项后，将按随机顺序抽取请求者个案的匹配项。否则，将按请求者个案在文件中的顺序对其进行处理。这可能会导致文件中后续可供选择的个案数较少。如果请求者个案具有系统性的顺序，那么这可能会引入一些偏差。</p>
+
+  <p><span class="runinhead">随机数种子</span>
+如果您希望能够使用同一数据在将来的运行中精确地重现匹配项，那么可以为您从集合中随机选择时使用的随机数设置种子值。这个种子与常规的 SPSS Statistics 随机数种子无关。</p>
+
+  <h2>其他输出</h2>
+
+  <p><span class="runinhead">附加输出数据集</span> 通过选中此框并输入数据集名称，可以创建包含匹配项的新数据集。新数据集将包含分配给请求者个案的每个供应者个案的所有变量，后跟匹配组变量及其分配到的请求者个案的 ID。</p>
+
+  <p class="bullet">• 如果使用此选项，那么只能向每个请求者个案分配一个供应者个案。即，主对话框中的“匹配 ID 变量名”字段只能包含一个名称。</p>
+
+  <h2>其他功能部件</h2>
+
+  <p>此对话框将生成 FUZZY 扩展命令的语法。要显示此命令的语法帮助，请运行以下语法：</p>
+
+  <p class="codeblock">FUZZY /HELP。</p>
+
+  <p>FUZZY 的多项功能在此对话框中不受支持，其中包括使用单独的个案数据集和控制数据集作为输入。另外，还可以使用以 Python 编写的定制函数来计算模糊距离。在语法中，可以创建一个日志文件，用于在过程运行期间记录进度。对于大型问题，这可能非常有帮助。</p>
+
+  <h2>要求</h2>此命令需要 Python Essentials 以及版本不低于 V18 的 IBM SPSS Statistics。对于单一数据集使用，可能需要 Statistics V21 或者 V20 的最新修订。您可以从
+SPSS Community Web 站点 (www.ibm.com/developerworks/spssdevcentral)
+下载 Python Essentials。<br>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

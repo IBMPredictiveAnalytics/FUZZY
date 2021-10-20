@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <title>Correspondência de Controle de Caso</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <p>Este procedimento corresponde casos (responsáveis pela demanda) e controles (fornecedores) contidos em um único conjunto de dados. A correspondência é baseada em uma igualdade aproximada ou exata de uma ou mais variáveis de correspondência.</p>
+
+  <p>Para cada caso no grupo de responsáveis pela demanda ou de caso, uma correspondência é tentada com casos no grupo de fornecedores ou de controle. O ID do caso de fornecedor selecionado, ou casos, se várias correspondências são solicitadas, é gravado como um ou mais novas variáveis.</p>
+
+  <p><span class="runinhead">Variáveis para Corresponder em</span> Selecione   uma ou mais variáveis para correspondência. O conjunto de dados não precisa ser ordenado por essas variáveis.</p>
+
+  <p><span class="runinhead">Tolerâncias de Correspondência</span> Se as variáveis de correspondência   para casos de demandante e fornecedores devem ser exatamente iguais,   deixe esse controle vazio. Se alguma tolerância ou "fuzz" for desejado,   digite o valor de tolerância para cada variável de correspondência. Use zero   para uma correspondência exata. Devem ser inseridos tantos valores, separados por um espaço, quanto variáveis de correspondência.</p>
+
+  <p class="bullet">• Variáveis de sequência devem ter um valor de tolerância de zero.</p>
+
+  <p><span class="runinhead">Indicador de Grupo</span> Especifique a   variável que distingue casos de demandante e de fornecedor. Um valor 1 indica um caso de demandante e um valor de 0 indica um fornecedor. Quaisquer outros valores, incluindo omisso, farão o caso ser ignorado.</p>
+
+  <p><span class="runinhead">ID de Caso</span> Especifique uma variável identificadora de caso. O valor do ID de caso para o(s) fornecedor(es) selecionado(s) será armazenado com cada caso de demandante.</p>
+
+  <p><span class="runinhead">Nomes para Variáveis de ID de Correspondência</span>   Especifique um nome para a variável que conterá o ID do caso   de fornecedor selecionado. Diversos nomes podem ser inseridos separados   por um espaço em branco. O número de casos de fornecedor para cada demandante é determinado pelo número de nomes de variáveis digitados aqui. Se uma correspondência não puder ser produzida, o valor será omisso do sistema.</p>
+
+  <p class="bullet">• Os nomes de variáveis listados não devem existir no conjunto de dados.</p>
+
+  <p><span class="runinhead">Nome para a Variável de Grupo de Correspondência</span>   Insira um nome para a variável de grupo de correspondência. Essa variável conterá   um código indicando o conjunto de casos de fornecedor elegíveis. O   valor em si não é significativo, mas dois casos com o mesmo valor   têm o mesmo conjunto de casos de fornecedor elegíveis.</p>
+
+  <p class="bullet">• O nome de variável listado não deve existir no conjunto de dados.</p>
+
+  <h2>Opções</h2>
+
+  <p><span class="runinhead">Variável para Número de Casos   Elegíveis</span> Opcionalmente, insira um nome de variável para registrar o tamanho   do conjunto, isto é, o número de casos elegíveis para cada   caso de demandante. Este é o número de casos que atendam aos critérios de correspondência depois de correspondências para casos anteriores serem removidas, se amostragem, sem reposição.</p>
+
+  <p class="bullet">• O nome de variável listado não deve existir no conjunto de dados.</p>
+
+  <p><span class="runinhead">Amostragem</span> Os casos de fornecedor podem ser desenhados com ou sem reposição. Indique a opção desejada.</p>
+
+  <p><span class="runinhead">Dar prioridade a correspondência exata</span>   Marque esta caixa para que o algoritmo de correspondência tente primeiro uma   correspondência exata antes de tentar uma correspondência difusa.</p>
+
+  <p><span class="runinhead">Maximizar o desempenho de execução</span>   Marque esta caixa para maximizar o desempenho de execução - maior   velocidade e menor uso de memória. Essa marcação pode aumentar um pouco   o número de casos sem correspondência, mas, para grandes conjuntos de dados,   a melhoria no desempenho pode ser dramática. Algumas das estatísticas de saída não se aplicam, porque o procedimento não acumula dados em todas as possíveis correspondências.</p>
+
+  <p class="bullet">• Você pode especificar prioridade exata e minimizar memória.</p>
+
+  <p><span class="runinhead">Escolher ordem de caso aleatoriamente ao traçar correspondências</span> Marque para desenhar correspondências para os casos de demandante   em ordem aleatória. Caso contrário, os casos de demandante são processados na   ordem na qual eles ocorrem no arquivo. Isso poderia resultar em   menos casos para selecionar mais tarde no arquivo. Se os casos de demandante tiverem uma ordem sistemática, isso pode introduzir algum viés.</p>
+
+  <p><span class="runinhead">Semente de Número Aleatório</span> Para ter a capacidade de reproduzir as correspondências exatamente em uma futura execução com os mesmos dados, configure um valor semente para os números aleatórios usados na escolha aleatória em um conjunto. Essa semente não está relacionada com a semente de número aleatório geral do SPSS Statistics.</p>
+
+  <h2>Saída Adicional</h2>
+
+  <p><span class="runinhead">Conjunto de Dados de Saída Adicional</span> Marque   a caixa e insira um nome de conjunto de dados para criar um novo conjunto de dados   contendo as correspondências. O novo conjunto de dados conterá todas as   variáveis para cada caso de fornecedor que foi designado para um   caso de demandante seguido pela variável de grupo de correspondência e o id do   caso de demandante ao qual ele foi designado.</p>
+
+  <p class="bullet">• Se você utilizar essa opção, apenas um caso de fornecedor   pode ser designado para cada caso de demandante. Ou seja, o campo Nomes   para Variáveis de ID de Correspondência no diálogo principal pode conter apenas   um nome.</p>
+
+  <h2>Recursos adicionais</h2>
+
+  <p>Esta caixa de diálogo gera sintaxe para o comando de extensão FUZZY.
+  Para exibir ajuda de sintaxe para este comando, execute a seguinte sintaxe:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY possui diversos de recursos não suportados neste diálogo,   incluindo o uso de conjuntos de dados de caso e de controle separados como entrada.
+  Funções customizadas gravadas em Python também podem ser usadas para calcular a distância difusa. Na sintaxe, é possível criar um arquivo de log que registra o progresso conforme o procedimento é executado. Isso pode ser muito útil em grandes problemas.</p>
+
+  <h2>Requisitos</h2>Este comando requer o Python Essentials   e pelo menos a versão 18 do IBM SPSS Statistics. Para   uso de conjunto de dados único, o Statistics versão 21 ou um hot fix para a versão 20   pode ser necessário. Você pode fazer o download o Python Essentials no website SPSS Community em www.ibm.com/developerworks/spssdevcentral.<br>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <title>Fallkontrollabgleich</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <p>Diese Prozedur gleicht Fälle (Anforderer) und Kontrollgrößen (Bereitsteller) in einem einzigen Dataset ab. Der Abgleich basiert auf näherungsweise berechneter oder exakter Gleichheit von einer oder mehreren Abgleichsvariablen.</p>
+
+  <p>Für jeden Fall in der anfordernden Fallgruppe wird ein Abgleich mit Fällen in der bereitstellenden Kontrollgruppe versucht. Die ID des ausgewählten bereitstellenden Falls bzw. der bereitstellenden Fälle, wenn mehrere Übereinstimmungen angefordert werden, wird als eine oder mehrere neue Variablen geschrieben.</p>
+
+  <p><span class="runinhead">Abzugleichende Variablen:</span> Wählen Sie mindestens eine Variable aus, für die ein Abgleich durchgeführt werden soll. Das Dataset muss nicht nach diesen Variablen sortiert sein.</p>
+
+  <p><span class="runinhead">Abgleichstoleranzen:</span> Wenn die Abgleichsvariablen für anfordernde und bereitstellende Fälle genau gleich sein müssen, lassen Sie dieses Steuerelement leer. Wenn etwas Toleranz ("Ungenauigkeit") gewünscht ist, geben Sie den Toleranzwert für jede übereinstimmende Variable an. Für eine exakte Übereinstimmung verwenden Sie Null. Es müssen gleich viele Werte (durch Leerzeichen getrennt) wie Abgleichsvariablen eingegeben werden.</p>
+
+  <p class="bullet">•&nbsp;Zeichenfolgevariablen müssen einen Toleranzwert von Null haben.</p>
+
+  <p><span class="runinhead">Gruppenindikator:</span> Geben Sie die Variable an, die anfordernde und bereitstellende Fälle unterscheidet. Ein Wert von Null gibt einen anfordernden Fall an, ein Wert von 0 einen bereitstellenden Fall. Werden andere Werte angegeben oder wird kein Wert angegeben, wird der Fall ignoriert.</p>
+
+  <p><span class="runinhead">Fall-ID:</span> Geben Sie eine Fall-ID-Variable an. Der Fall-ID-Wert für die ausgewählten Bereitsteller wird zusammen mit jedem anfordernden Fall gespeichert.</p>
+
+  <p><span class="runinhead">Namen für Abgleichs-ID-Variablen:</span> Geben Sie einen Namen für die Variable an, die die ID des ausgewählten bereitstellenden Falls enthält. Es können mehrere Namen durch Leerzeichen voneinander getrennt eingegeben werden. Die Anzahl der bereitstellenden Fälle für jeden Anforderer wird durch die Anzahl der hier eingegebenen Variablennamen bestimmt. Wenn keine Übereinstimmung erzielt werden kann, wird der Wert als systemdefiniert fehlend definiert.</p>
+
+  <p class="bullet">•&nbsp;Die aufgelisteten Variablennamen dürfen im Dataset noch nicht vorhanden sein.</p>
+
+  <p><span class="runinhead">Name für Abgleichsgruppenvariable:</span> Geben Sie einen Namen für die Abgleichsgruppenvariable ein. Diese Variable enthält einen Code, der die Gruppe infrage kommender bereitstellender Fälle angibt. Der Wert selbst ist nicht aussagekräftig, aber zwei Fälle mit demselben Wert haben dieselbe Gruppe infrage kommender bereitstellender Fälle.</p>
+
+  <p class="bullet">•&nbsp;Der aufgelistete Variablenname darf im Dataset noch nicht vorhanden sein.</p>
+
+  <h2>Optionen</h2>
+
+  <p><span class="runinhead">Variable für Anzahl auswählbarer Fälle:</span> Geben Sie optional einen Variablennamen ein, um die Größe des Pools, d. h. die Anzahl infrage kommender Fälle, für jeden anfordernden Fall aufzuzeichnen. Dies ist die Anzahl der Fälle, die die Übereinstimmungskriterien erfüllen, nachdem Übereinstimmungen für vorherige Fälle entfernt wurden, wenn eine Stichprobenziehung ohne Ersetzung durchgeführt wird.</p>
+
+  <p class="bullet">•&nbsp;Der aufgelistete Variablenname darf im Dataset noch nicht vorhanden sein.</p>
+
+  <p><span class="runinhead">Stichprobenziehung:</span> Für anfordernde Fälle kann eine Stichprobenziehung mit oder ohne Ersetzung durchgeführt werden. Geben Sie die gewünschte Auswahl an.</p>
+
+  <p><span class="runinhead">Exakte Übereinstimmungen haben Priorität:</span> Wählen Sie dieses Feld aus, wenn der Abgleichungsalgorithmus zuerst nach einer exakten Übereinstimmung und dann nach einer groben Übereinstimmung suchen soll.</p>
+
+  <p><span class="runinhead">Ausführungsleistung maximieren:</span> Wählen Sie dieses Feld aus, um die Ausführungsleistung (größte Geschwindigkeit und geringste Speicherbelegung) zu maximieren. Wenn Sie diese Option auswählen, kann sich die Anzahl nicht übereinstimmender Fälle leicht erhöhen, bei großen Datasets kann die Leistungssteigerung jedoch erheblich sein. Einige der Ausgabestatistikdaten sind nicht zutreffend, da die Prozedur nicht Daten zu allen möglichen Übereinstimmungen kumuliert.</p>
+
+  <p class="bullet">•&nbsp;Die genaue Priorität und die Speicherminimierung können nicht zusammen angewendet werden.</p>
+
+  <p><span class="runinhead">Zufällige Fallreihenfolge beim Abgleichen:</span> Wählen Sie diese Option aus, um Abgleiche für die anfordernden Fälle in Zufallsreihenfolge durchzuführen. Andernfalls werden die anfordernden Fälle in der Reihenfolge verarbeitet, in denen sie in der Datei auftreten. Dies könnte dazu führen, dass weniger Fälle ausgewählt werden, die später in der Datei auftreten. Wenn die anfordernden Fälle eine systematische Reihenfolge haben, könnte dies eine gewisse Verzerrung einführen.</p>
+
+  <p><span class="runinhead">Startwert für Zufallszahlen:</span> Wenn Sie dieselbe Übereinstimmung bei einer zukünftigen Ausführung mit denselben Daten reproduzieren wollen, können Sie einen Startwert für die Zufallszahlen festlegen, der bei der zufälligen Auswahl aus einer Gruppe verwendet wird. Dieser Startwert ist nicht mit dem allgemeinen SPSS Statistics-Startwert für Zufallszahlen verwandt.</p>
+
+  <h2>Zusätzliche Ausgabe</h2>
+
+  <p><span class="runinhead">Zusätzliches Ausgabedataset:</span> Wählen Sie das Feld aus und geben Sie einen Datasetnamen ein, um ein neues Dataset für die Übereinstimmungen zu erstellen. Das neue Dataset enthält alle Variablen für jeden bereitstellenden Fall, der durch die Abgleichsgruppenvariable einem anfordernden Fall zugewiesen wurde, sowie die ID des anfordernden Falls, dem er zugewiesen wurde.</p>
+
+  <p class="bullet">•&nbsp;Wenn Sie diese Option verwenden, kann jedem anfordernden Fall nur ein bereitstellender Fall zugewiesen werden. Das Feld <b>Namen für Abgleichs-ID-Variablen</b> im Hauptdialogfenster darf also nur einen Namen enthalten.</p>
+
+  <h2>Weitere Funktionen</h2>
+
+  <p>In diesem Dialogfeld wird Syntax für den Erweiterungsbefehl FUZZY erzeugt.
+  Führen Sie folgenden Befehl aus, um die Syntaxhilfe für diesen Befehl anzuzeigen:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY hat eine Reihe von Funktionen, die in diesem Dialogfeld nicht unterstützt werden. Dazu gehört die Verwendung getrennter Fall- und Kontrollgrößen-Datasets als Eingabe.
+  In Python geschriebene benutzerdefinierte Funktionen können ebenfalls zum Berechnen des Abstands grober Übereinstimmungen verwendet werden. In der Syntax können Sie eine Protokolldatei erstellen, die den Fortschritt während der Prozedur aufzeichnet. Dies kann sehr hilfreich bei großen Problemen sein.</p>
+
+  <h2>Anforderungen</h2>Für diesen Befehl sind Python Essentials und mindestens Version 18 von IBM SPSS Statistics erforderlich. Bei Verwendung eines einzelnen Datasets ist möglicherweise Statistics Version 21 oder ein Hotfix für Version 20 erforderlich. Sie können Python Essentials von der SPSS Community-Website (www.ibm.com/developerworks/spssdevcentral) herunterladen.<br>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

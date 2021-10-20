@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <title>Dopasowanie obserwacja-kontrola</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <p>Ta procedura dopasowuje rekordy z grupy obserwacji (żądające) do rekordów z grupy kontroli
+  (dostawcy) zawartych w pojedynczym zbiorze danych. Dopasowywanie
+  jest oparte na przybliżonej lub dokładnej zgodności jednej lub
+  większej liczby zmiennych zgodności.</p>
+
+  <p>Dla każdego rekordu zawartego w grupie żądającego (lub grupie
+  obserwacji) podejmowana jest próba dopasowania do rekordu w
+  grupie dostawcy (lub grupie kontrolnej). Identyfikator wybranego
+  rekordu dostawcy lub wybranych obserwacji dostawcy, jeśli
+  żądanie dotyczy wielu dopasowań, jest zapisywany jako jedna lub więcej nowych zmiennych.</p>
+
+  <p><span class="runinhead">Zmienne do dopasowania</span> Wybierz
+  jedną lub większą liczbę zmiennych do dopasowania. Zbiór danych nie
+  musi być sortowany według tych zmiennych.</p>
+
+  <p><span class="runinhead">Tolerancje dopasowania</span> Ten element
+  sterujący należy pozostawić pusty, jeśli zmienne dopasowania
+  dla rekordu żądającego i rekordu dostawcy muszą być dokładnie
+  równe. Jeśli wymagana jest pewna tolerancja lub rozmycie, wówczas
+  należy wprowadzić wartość tolerancji dla każdej zmiennej
+  dopasowania. W przypadku dopasowania dokładnego należy użyć
+  wartości zero. Należy wprowadzić taką liczbę wartości
+  (rozdzielanych spacjami) jak liczba zmiennych dopasowania.</p>
+
+  <p class="bullet">• Zmienne łańcuchowe muszą mieć tolerancję równą
+  zero.</p>
+
+  <p><span class="runinhead">Wskaźnik grupy</span> Określ zmienną,
+  która umożliwi odróżnienie rekordów żądającego od rekordów
+  dostawcy. Wartość 1 oznacza rekord żądającego, a wartość 0
+  oznacza dostawcę. Każda inna wartość, w tym również jej brak,
+  spowoduje zignorowanie rekordu.</p>
+
+  <p><span class="runinhead">Id. obserwacji</span> Określ zmienną
+  identyfikatora obserwacji. Wartość Id. obserwacji dla wybranych
+  rekordów dostawcy będzie zapisywana z każdym rekordem żądającego.</p>
+
+  <p><span class="runinhead">Nazwy dla zmiennych id.
+  dopasowania</span> Określ nazwę dla zmiennej, która będzie
+  przechowywała identyfikator wybranego rekordu dostawcy. Można
+  wprowadzić wiele nazw rozdzielanych spacjami. Liczba rekordów
+  dostawcy dla każdego żądającego jest określona przez liczbę nazw
+  zmiennych wprowadzonych do tego pola. Jeśli nie można uzyskać
+  dopasowania, wówczas wartość będzie brakiem systemowym.</p>
+
+  <p class="bullet">• Nazwy zmiennych dodawane do listy nie mogą
+  jeszcze istnieć w zbiorze danych.</p>
+
+  <p><span class="runinhead">Nazwa zmiennej grupy dopasowania</span>
+  Wprowadź nazwę dla zmiennej dopasowania grupy. Ta zmienna będzie
+  przechowywała kod oznaczający zbiór uprawnionych rekordów
+  dostawcy. Sama wartość nie jest znacząca, ale dwa rekordy o
+  tej samej wartości mają ten sam zbiór uprawnionych rekordów
+  dostawcy.</p>
+
+  <p class="bullet">• Nazwa zmiennej dodawana do listy nie może
+  jeszcze istnieć w zbiorze danych.</p>
+
+  <h2>Opcje</h2>
+
+  <p><span class="runinhead">Zmienna dla liczby uprawnionych
+  rekordów </span> Opcjonalnie wprowadź nazwę zmiennej, aby
+  zarejestrować rozmiar puli, tj. liczbę rekordów uprawnionych,
+  dla każdego rekordu żądającego. Jest to liczba rekordów,
+  które spełniają kryteria dopasowania po usunięciu dopasowań dla
+  poprzednich obserwacji, pod warunkiem że losowanie odbywa się bez
+  zwracania.</p>
+
+  <p class="bullet">• Nazwa zmiennej dodawana do listy nie może
+  jeszcze istnieć w zbiorze danych.</p>
+
+  <p><span class="runinhead">Losowanie</span> Rekordy dostawcy
+  mogą być losowane ze zwracaniem lub bez zwracania. Wskaż żądaną
+  opcję.</p>
+
+  <p><span class="runinhead">Dokładna zgodność ma priorytet</span>
+  Zaznaczenie tego pola wyboru spowoduje, że algorytm dopasowywania
+  będzie najpierw podejmował próbę uzyskania dokładnej zgodności, a
+  następnie podejmie próby uzyskania dopasowania rozmytego.</p>
+
+  <p><span class="runinhead">Maksymalizuj wydajność wykonywania</span>
+  Zaznacz to pole wyboru, aby zmaksymalizować wydajność wykonywania -
+  wykonywanie będzie się odbywało z największą szybkością i
+  najmniejszym wykorzystaniem pamięci. Zaznaczenie tego pola może
+  spowodować nieznaczne zwiększenie rekordów niedopasowanych, ale
+  w przypadku dużych zbiorów danych zwiększenie wydajności może być
+  bardzo znaczące. To ustawienie nie obowiązuje w przypadku
+  niektórych statystyk wynikowych, ponieważ procedura nie kumuluje
+  danych we wszystkich możliwych dopasowaniach.</p>
+
+  <p class="bullet">• Nie można jednocześnie wybrać ustawienia
+  określającego priorytet dla dokładnej zgodności oraz ustawienia
+  minimalizującego obciążenie pamięci.</p>
+
+  <p><span class="runinhead">Kolejność losowa przy doborze dopasowań</span> Zaznaczenie tego pola wyboru spowoduje,
+  że dopasowywanie rekordów żądającego będzie przebiegało w
+  kolejności losowej. Jeśli to pole nie zostanie zaznaczone, wówczas
+  rekordy żądającego będą przetwarzane w kolejności, w jakiej
+  występują w pliku. To może spowodować zmniejszenie liczby rekordów
+  dostępnych później do wyboru w pliku. Jeśli rekordy żądającego
+  są ustawione w kolejności uporządkowanej, wówczas zaznaczenie
+  tego pola może spowodować wprowadzenie pewnego odchylenia.</p>
+
+  <p><span class="runinhead">Wartość początkowa generatora liczb
+  losowych</span> Jeśli wymagane jest dokładne odtworzenie dopasowań
+  w kolejnym  uruchomieniu procedury z tymi samymi danymi, wówczas można
+  ustawić wartość początkową dla liczb losowych na potrzeby losowego
+  wybierania ze zbioru. Ta wartość początkowa generatora liczb
+  losowych nie jest powiązana z wartością początkową generatora liczb
+  losowych w produkcie SPSS Statistics.</p>
+
+  <h2>Dodatkowe wyniki</h2>
+
+  <p><span class="runinhead">Dodatkowy wynikowy zbiór danych</span>
+  To pole wyboru można zaznaczyć, a następnie wprowadzić nazwę zbioru
+  danych, aby utworzyć nowy zbiór danych zawierający dopasowania. Nowy zbiór danych będzie zawierał wszystkie zmienne dla każdego
+  rekordu dostawcy, który został przypisany do rekordu
+  żądającego - po nich następuje zmienna grupy dopasowania oraz
+  identyfikator rekordu żądającego, do którego nastąpiło
+  przypisanie.</p>
+
+  <p class="bullet">• W przypadku użycia tej opcji tylko jeden
+  rekord dostawcy może zostać przypisany do każdego rekordu
+  żądającego. Oznacza to, że pole Nazwy dla zmiennych id. dopasowania
+  w głównym oknie dialogowym może zawierać tylko jedną nazwę.</p>
+
+  <h2>Funkcje dodatkowe</h2>
+
+  <p>To okno dialogowe generuje komendę rozszerzającą FUZZY.
+  Aby wyświetlić pomoc dotyczącą składni tej komendy, uruchom następującą komendę:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>Komenda FUZZY ma pewną liczbę funkcji, które nie są
+  obsługiwane w tym oknie dialogowym, między innymi dotyczące
+  stosowania osobnych zbiorów danych obserwacji i kontroli jako
+  danych wejściowych.
+  Niestandardowe funkcje napisane w języku Python również mogą być
+  używane na potrzeby obliczania odległości rozmycia. Za pomocą komend można
+  utworzyć plik dziennika, w którym będzie rejestrowany postęp
+  działania procedury. Ten plik może być bardzo przydatny w przypadku
+  większych problemów.</p>
+
+  <h2>Wymagania</h2>Ta komenda wymaga dodatku Python Essentials
+  oraz produktu IBM SPSS Statistics przynajmniej w wersji 18. W przypadku użycia pojedynczego zbioru danych konieczny może być
+  produkt Statistics 21 lub poprawka hot fix dla wersji 20. Dodatek Python Essentials można pobrać z serwisu SPSS Community,
+  pod adresem www.ibm.com/developerworks/spssdevcentral.<br>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

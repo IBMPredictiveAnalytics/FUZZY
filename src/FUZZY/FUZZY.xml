@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Extension xmlns="http://spss.com/clementine/extensions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" debug="false" version="1.0" xsi:schemaLocation="http://spss.com/clementine/extensions http://xml.spss.com/clementine/extensions/CLEFSpecificationFile.xsd">
+	<ExtensionDetails copyright="Licensed Materials - Property of IBM.  IBM SPSS Products: Statistics Common (C) Copyright IBM Corp. 1989, 2013.  US Government Users Restricted Rights - Use, duplication or  disclosure restricted by GSA ADP Schedule Contract with IBM Corp." description="" id="FUZZY" label="" provider="SPSS, Inc." providerTag="spss" version="1.0"/>
+	<Resources>
+		<Bundle id="bundle1" path="FUZZY" type="properties"/>
+	</Resources>
+	<CommonObjects>
+		<Actions>
+			<Action id="FUZZY_action" imagePath="IBMdialogicon.png" label="Case Control Matching..." labelKey="FUZZY_action.LABEL"/>
+		</Actions>
+	</CommonObjects>
+	<UserInterface>
+		<Controls>
+			<MenuItem action="FUZZY_action" offset="17" showIcon="true" spssMenu="Data"/>
+		</Controls>
+	</UserInterface>
+	<Node id="FUZZY" label="Case-Control Matching" labelKey="FUZZY.LABEL" type="modelBuilder">
+		<Properties>
+			<Property name="FUZZY" syntax="FUZZY %%by%% %%supplierid%% %%newdemanderid%% %%group%% %%fuzz%% %%exactpriority%%  &#10;%%drawpoolsize%% %%hashvar%% %%output%%&#10;/OPTIONS %%sampling%% %%minimizememory%% %%shuffle%% %%seed%%&#10;"/>
+			<Property description="false" name="FUZZY_modal"/>
+			<Property description="" descriptionKey="source_vars_tooltip.LABEL" isList="true" label="Variables:" labelKey="source_vars.LABEL" name="source_vars" selectionPool="source_fields" syntax="%%ThisValue%%" valueType="field"/>
+			<Property description="Select one or more variables to match on" descriptionKey="by_tooltip.LABEL" isList="true" isRequired="true" label="Variables to Match on:" labelKey="by.LABEL" name="by" selectionPool="source_fields" syntax="BY=%%ThisValue%%" valueType="field"/>
+			<Property description="Select the variable that distinguishes cases and controls" descriptionKey="group_tooltip.LABEL" isList="true" isRequired="true" label="Group Indicator:" labelKey="group.LABEL" name="group" selectionPool="source_fields" syntax="GROUP=%%ThisValue%%" valueType="field"/>
+			<Property defaultValue="" description="" descriptionKey="fuzz_tooltip.LABEL" label="Match Tolerances:" labelKey="fuzz.LABEL" name="fuzz" syntax="FUZZ=%%ThisValue%%" valueType="string"/>
+			<Property description="This variable is used to identify the matched case" descriptionKey="supplierid_tooltip.LABEL" isList="true" isRequired="true" label="Case ID:" labelKey="supplierid.LABEL" name="supplierid" selectionPool="source_fields" syntax="SUPPLIERID=%%ThisValue%%" valueType="field"/>
+			<Property defaultValue="" description="Enter one or more variable names that do not already exist in the dataset" descriptionKey="newdemanderid_tooltip.LABEL" isRequired="true" label="Names for Match ID Variables (must not already exist):" labelKey="newdemanderid.LABEL" name="newdemanderid" syntax="NEWDEMANDERIDVARS=%%ThisValue%%" valueType="string"/>
+			<Property defaultValue="" description="Enter a name for a variable to hold the number of available matches for each case" descriptionKey="drawpoolsize_tooltip.LABEL" label="Variable for Number of Eligible Cases (must not already exist):" labelKey="drawpoolsize.LABEL" name="drawpoolsize" syntax="DRAWPOOLSIZE=%%ThisValue%%" valueType="fieldName"/>
+			<Property defaultValue="without" description="" descriptionKey="sampling_tooltip.LABEL" label="Sampling" labelKey="sampling.LABEL" name="sampling" syntax="SAMPLEWITHREPLACEMENT=%%ThisValue%%" valueType="enum">
+				<Enumeration>
+					<Enum description="" descriptionKey="without_tooltip.LABEL" hasSubGroup="false" label="Without replacement" labelKey="without.LABEL" mnemonic="W" mnemonicKey="without_mnemonic.VALUE" syntax="FALSE" value="without"/>
+					<Enum description="" descriptionKey="with_tooltip.LABEL" hasSubGroup="false" label="With replacement" labelKey="with.LABEL" mnemonic="R" mnemonicKey="with_mnemonic.VALUE" syntax="TRUE" value="with"/>
+				</Enumeration>
+			</Property>
+			<Property defaultValue="true" description="Exact priority and minimize memory cannot be used together" descriptionKey="minimizememory_tooltip.LABEL" label="Maximize execution performance" labelKey="minimizememory.LABEL" name="minimizememory" syntax="MINIMIZEMEMORY=TRUE±MINIMIZEMEMORY=FALSE" valueType="boolean"/>
+			<Property defaultValue="false" description="Randomize the order in which case matches are drawn" descriptionKey="shuffle_tooltip.LABEL" label="Randomize case order when drawing matches" labelKey="shuffle.LABEL" name="shuffle" syntax="SHUFFLE=TRUE±SHUFFLE=FALSE" valueType="boolean"/>
+			<Property defaultValue="" description="Enter a number if you want to repeat the analysis exactly" descriptionKey="seed_tooltip.LABEL" label="Random Number Seed:" labelKey="seed.LABEL" name="seed" syntax="SEED=%%ThisValue%%" valueType="double"/>
+			<Property defaultValue="false" description="Exact priority and minimize memory cannot be used together" descriptionKey="exactpriority_tooltip.LABEL" label="Give priority to exact matches" labelKey="exactpriority.LABEL" name="exactpriority" syntax="EXACTPRIORITY=TRUE±EXACTPRIORITY=FALSE" valueType="boolean"/>
+			<Property defaultValue="" description="If two cases have the same value of this variable, the same set of supplier cases is eligible" descriptionKey="hashvar_tooltip.LABEL" isRequired="true" label="Name for Matchgroup Variable (must not already exist):" labelKey="hashvar.LABEL" name="hashvar" syntax="MATCHGROUPVAR=%%ThisValue%%" valueType="fieldName"/>
+			<Property description="" descriptionKey="additional_tooltip.LABEL" label="Additional Output Dataset" labelKey="additional.LABEL" name="additional" syntax="%%ThisValue%%"/>
+			<Property defaultValue="false" description="" descriptionKey="item_59_tooltip.LABEL" label="Create new dataset of matches" labelKey="item_59.LABEL" name="item_59" syntax="%%ThisValue%%±" valueType="boolean"/>
+			<Property defaultValue="" description="" descriptionKey="output_tooltip.LABEL" label="Dataset Name:" labelKey="output.LABEL" name="output" syntax="DS3=%%ThisValue%%" valueType="fieldName"/>
+		</Properties>
+		<SelectionPool id="source_fields" type="fields"/>
+		<UserInterface>
+			<Tabs>
+				<Tab helpLink="FUZZY.htm">
+					<PropertiesPanel>
+						<SourceFieldsBrowser copyFields="false" mnemonic="V" mnemonicKey="source_vars_mnemonic.VALUE" property="source_vars" selectionPool="source_fields" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="both" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="1.0"/>
+						</SourceFieldsBrowser>
+						<StaticText text="This dialog requires the Python Essentials" textKey="item_4.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="1" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<MultiFieldChooserControl mnemonic="A" mnemonicKey="by_mnemonic.VALUE" property="by" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="both" gridColumn="2" gridRow="0" gridWidth="1" rowWeight="1.0"/>
+						</MultiFieldChooserControl>
+						<SingleFieldChooserControl mnemonic="G" mnemonicKey="group_mnemonic.VALUE" property="group" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="3" gridWidth="1" rowWeight="0.0"/>
+						</SingleFieldChooserControl>
+						<TextBoxControl mnemonic="M" mnemonicKey="fuzz_mnemonic.VALUE" property="fuzz">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="1" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<StaticText text="If matches have a tolerance (fuzz) factor enter the tolerance\nfor each match variable separated by blanks" textKey="item_8.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="2" gridRow="2" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<SingleFieldChooserControl mnemonic="C" mnemonicKey="supplierid_mnemonic.VALUE" property="supplierid" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="4" gridWidth="1" rowWeight="0.0"/>
+						</SingleFieldChooserControl>
+						<TextBoxControl mnemonic="N" mnemonicKey="newdemanderid_mnemonic.VALUE" property="newdemanderid">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="5" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<StaticText text="The number of names entered determines the number\nof matches for each demander variable.  Only one name\ncan be specified if an additional output dataset is created" textKey="item_23.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="2" gridRow="6" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<PropertiesSubPanel buttonLabel="Options..." buttonLabelKey="options.LABEL" dialogTitle="Options:" dialogTitleKey="optionssub.TITLE" helpLink="" mnemonic="O" mnemonicKey="options_mnemonic.VALUE">
+							<Layout columnWeight="0.0" fill="none" gridColumn="3" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+							<PropertiesPanel>
+								<TextBoxControl mnemonic="V" mnemonicKey="drawpoolsize_mnemonic.VALUE" property="drawpoolsize">
+									<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+								</TextBoxControl>
+								<RadioButtonGroupControl property="sampling" rows="2" useSubPanel="false">
+									<Layout columnWeight="1.0" fill="both" gridColumn="0" gridRow="1" gridWidth="1" rowWeight="1.0"/>
+									<RadioButton property="without"/>
+									<RadioButton property="with"/>
+								</RadioButtonGroupControl>
+								<CheckBoxControl mnemonic="M" mnemonicKey="minimizememory_mnemonic.VALUE" property="minimizememory">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="3" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+								<CheckBoxControl mnemonic="A" mnemonicKey="shuffle_mnemonic.VALUE" property="shuffle">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="4" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+								<TextBoxControl mnemonic="N" mnemonicKey="seed_mnemonic.VALUE" property="seed">
+									<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="5" gridWidth="1" rowWeight="0.0"/>
+								</TextBoxControl>
+								<CheckBoxControl mnemonic="G" mnemonicKey="exactpriority_mnemonic.VALUE" property="exactpriority">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="2" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+							</PropertiesPanel>
+						</PropertiesSubPanel>
+						<TextBoxControl mnemonic="H" mnemonicKey="hashvar_mnemonic.VALUE" property="hashvar">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="7" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<PropertiesSubPanel buttonLabel="Additional Output..." buttonLabelKey="additionaloutput.LABEL" dialogTitle="" dialogTitleKey="dialog6.TITLE" helpLink="" mnemonic="D" mnemonicKey="additionaloutput_mnemonic.VALUE">
+							<Layout columnWeight="0.0" fill="none" gridColumn="3" gridRow="1" gridWidth="1" rowWeight="0.0"/>
+							<PropertiesPanel>
+								<PropertiesPanel id="additional" label="Additional Output Dataset" labelKey="additional.LABEL">
+									<Layout columnWeight="1.0" fill="both" gridColumn="0" gridRow="1" gridWidth="1" rowWeight="1.0"/>
+									<CheckBoxControl labelAbove="true" mnemonic="C" mnemonicKey="item_59_mnemonic.VALUE" property="item_59">
+										<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+									</CheckBoxControl>
+									<TextBoxControl mnemonic="A" mnemonicKey="output_mnemonic.VALUE" property="output">
+										<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="1" gridWidth="1" leftIndent="8" rowWeight="1.0"/>
+									</TextBoxControl>
+								</PropertiesPanel>
+								<StaticText text="An additional output dataset can be created.\nIt contains all the supplier data for supplier cases used\nand the id of the demander case.\n\nOnly one match per demander case can be used with this option." textKey="item_61.LABEL">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+								</StaticText>
+							</PropertiesPanel>
+						</PropertiesSubPanel>
+						<StaticText text="This dialog was created using a later version of PASW Statistics\nand certain features may not function as intended." textKey="v17_warning.LABEL">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="2" gridWidth="1" rowWeight="1.0"/>
+						</StaticText>
+					</PropertiesPanel>
+				</Tab>
+			</Tabs>
+		</UserInterface>
+	</Node>
+</Extension>

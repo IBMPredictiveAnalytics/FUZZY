@@ -1,230 +1,169 @@
-#/***********************************************************************
-# * Licensed Materials - Property of IBM 
-# *
-# * IBM SPSS Products: Statistics Common
-# *
-# * (C) Copyright IBM Corp. 1989, 2014
-# *
-# * US Government Users Restricted Rights - Use, duplication or disclosure
-# * restricted by GSA ADP Schedule Contract with IBM Corp. 
-# ************************************************************************/
-
-# NLS_ENCODING=UTF-8
-# IBMUPYTH
-
-
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translations template for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
+
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-05-21 17:51+China Standard Time\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-10-11 00:30-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: ENCODING\n"
-"Generated-By: pygettext.py 1.5\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Globalization Pipeline\n"
 
-
-#: FUZZY.py:247
 msgid "---"
-msgstr ""
-"---"
+msgstr "---"
 
-#: FUZZY.py:340
 msgid "The required demander or supplier dataset name was not specified"
 msgstr ""
 "Non è stato specificato il nome dataset del richiedente o fornitore richiesto"
 
-#: FUZZY.py:342
-msgid "A group variable must be specified if the demander and supplier datasets are the same"
-msgstr ""
-"È necessario specificare una variabile di gruppo se i dataset richiedente e fornitore sono uguali"
-
-#: FUZZY.py:344
-msgid "A group variable cannot be used unless the demander and supplier datasets are the same"
-msgstr ""
-"Non è possibile utilizzare una variabile di gruppo a meno che i dataset richiedente e fornitore non siano uguali"
-
-#: FUZZY.py:346
-msgid "COPYTODEMANDER cannot be used with GROUP"
-msgstr ""
-"COPYTODEMANDER non può essere utilizzato con GROUP "
-
-#: FUZZY.py:349
-msgid "Error: variables can only be copied to the demander dataset if only a single match is requested"
-msgstr ""
-"Errore: le variabili possono essere copiate solo nel dataset del richiedente se è richiesta un'unica corrispondenza"
-
-#: FUZZY.py:355
 msgid ""
-"Match id variable names are not unique or none was specified\n"
+"A group variable must be specified if the demander and supplier datasets are "
+"the same"
 msgstr ""
-"I nomi di variabili ID corrispondenza non sono univoci oppure non ne è stato specificato alcuno\n"
+"È necessario specificare una variabile di gruppo se i dataset richiedente e "
+"fornitore sono uguali"
 
-#: FUZZY.py:358
+msgid ""
+"A group variable cannot be used unless the demander and supplier datasets are "
+"the same"
+msgstr ""
+"Non è possibile utilizzare una variabile di gruppo a meno che i dataset "
+"richiedente e fornitore non siano uguali"
+
+msgid "COPYTODEMANDER cannot be used with GROUP"
+msgstr "COPYTODEMANDER non può essere utilizzato con GROUP "
+
+msgid ""
+"Error: variables can only be copied to the demander dataset if only a single "
+"match is requested"
+msgstr ""
+"Errore: le variabili possono essere copiate solo nel dataset del richiedente "
+"se è richiesta un'unica corrispondenza"
+
+msgid "Match id variable names are not unique or none was specified\n"
+msgstr ""
+"I nomi di variabili ID corrispondenza non sono univoci oppure non ne è stato "
+"specificato alcuno\n"
+
 msgid "List of fuzz values does not match list of BY variables.  Fuzz: %s"
 msgstr ""
-"Elenco dei valori di approssimazione non corrispondente all'elenco delle variabili BY. Approssimazione: %s"
+"Elenco dei valori di approssimazione non corrispondente all'elenco delle "
+"variabili BY. Approssimazione: %s"
 
-#: FUZZY.py:366
-msgid "Samping with replacement cannot be used with minimize memory.  Using sampling without replacement"
+msgid ""
+"Samping with replacement cannot be used with minimize memory.  Using sampling "
+"without replacement"
 msgstr ""
-"Non è possibile utilizzare il campionamento con sostituzione quando si dispone di memoria ridotta. Utilizzare il campionamento senza sostituzione"
+"Non è possibile utilizzare il campionamento con sostituzione quando si dispone"
+" di memoria ridotta. Utilizzare il campionamento senza sostituzione"
 
-#: FUZZY.py:393
 msgid "Supplier dataset id variable not found: %s"
-msgstr ""
-"Variabile ID dataset fornitore non trovata: %s"
+msgstr "Variabile ID dataset fornitore non trovata: %s"
 
-#: FUZZY.py:426
 msgid "Supplier dataset variable not found: %s"
-msgstr ""
-"Variabile dataset fornitore non trovata: %s"
+msgstr "Variabile dataset fornitore non trovata: %s"
 
-#: FUZZY.py:439
 msgid "Error: supplier/demander type conflicts exist for variables: "
 msgstr ""
-"Errore: sono presenti conflitti di tipo fornitore/richiedente per le variabili: "
+"Errore: sono presenti conflitti di tipo fornitore/richiedente per le variabili"
+": "
 
-#: FUZZY.py:506
 msgid "Case-control matching"
-msgstr ""
-"Corrispondenza controllo casi"
+msgstr "Corrispondenza controllo casi"
 
-#: FUZZY.py:508
 msgid "Case Control Matching Statistics"
-msgstr ""
-"Statistiche corrispondenze controllo casi"
+msgstr "Statistiche corrispondenze controllo casi"
 
-#: FUZZY.py:510
 msgid "Exact Matches"
-msgstr ""
-"Corrispondenze esatte"
+msgstr "Corrispondenze esatte"
 
-#: FUZZY.py:510
 msgid "Fuzzy Matches"
-msgstr ""
-"Corrispondenze approssimative"
+msgstr "Corrispondenze approssimative"
 
-#: FUZZY.py:510
 msgid "Unmatched Including Missing Keys"
-msgstr ""
-"Non corrispondenza con chiavi mancanti"
+msgstr "Non corrispondenza con chiavi mancanti"
 
-#: FUZZY.py:511
 msgid "Log file"
-msgstr ""
-"File di log "
+msgstr "File di log "
 
-#: FUZZY.py:511
 msgid "Maximize Matching Performance"
-msgstr ""
-"Massimizza prestazioni corrispondenza"
+msgstr "Massimizza prestazioni corrispondenza"
 
-#: FUZZY.py:511
 msgid "Sampling"
-msgstr ""
-"Campionamento"
+msgstr "Campionamento"
 
-#: FUZZY.py:511
 msgid "Unmatched with Valid Keys"
-msgstr ""
-"Non corrispondenza con chiavi valide"
+msgstr "Non corrispondenza con chiavi valide"
 
-#: FUZZY.py:512
 msgid "with replacement"
-msgstr ""
-"con sostituzione "
+msgstr "con sostituzione "
 
-#: FUZZY.py:512
 msgid "without replacement"
-msgstr ""
-"senza sostituzione "
+msgstr "senza sostituzione "
 
-#: FUZZY.py:513
 msgid "no"
-msgstr ""
-"no"
+msgstr "no"
 
-#: FUZZY.py:513
 msgid "none"
-msgstr ""
-"nessuno"
+msgstr "nessuno"
 
-#: FUZZY.py:513
 msgid "yes"
-msgstr ""
-"sì"
+msgstr "sì"
 
-#: FUZZY.py:515
 msgid "Match Type"
-msgstr ""
-"Tipo di corrispondenza"
+msgstr "Tipo di corrispondenza"
 
-#: FUZZY.py:518 FUZZY.py:965 FUZZY.py:968
 msgid "Count"
-msgstr ""
-"Conteggio"
+msgstr "Conteggio"
 
-#: FUZZY.py:521
 msgid "Exact (All Variables)"
-msgstr ""
-"Esatto (tutte le variabili)"
+msgstr "Esatto (tutte le variabili)"
 
-#: FUZZY.py:527
 msgid "Fuzzy Match Tries"
-msgstr ""
-"Tentativi di corrispondenza approssimativa"
+msgstr "Tentativi di corrispondenza approssimativa"
 
-#: FUZZY.py:527
 msgid "Incremental Rejection Percentage"
-msgstr ""
-"Percentuale di rifiuto incrementale"
+msgstr "Percentuale di rifiuto incrementale"
 
-#: FUZZY.py:527 FUZZY.py:533 FUZZY.py:537
 msgid "Value"
-msgstr ""
-"Valore"
+msgstr "Valore"
 
-#: FUZZY.py:528
-msgid "Tries is the number of match comparisons before drawing.  Rejection percentage shows the match rejection rate.  Rejections are attributed to the first variable in the BY list that causes rejection."
+msgid ""
+"Tries is the number of match comparisons before drawing.  Rejection percentage"
+" shows the match rejection rate.  Rejections are attributed to the first "
+"variable in the BY list that causes rejection."
 msgstr ""
-"Tentativi è il numero di confronti di corrispondenza prima dell'estrazione. La percentuale di rifiuto mostra la frequenza di rifiuti di corrispondenza. I rifiuti sono attribuiti alla prima variabile nell'elenco BY che causa il rifiuto."
+"Tentativi è il numero di confronti di corrispondenza prima dell'estrazione. La"
+" percentuale di rifiuto mostra la frequenza di rifiuti di corrispondenza. I "
+"rifiuti sono attribuiti alla prima variabile nell'elenco BY che causa il "
+"rifiuto."
 
-#: FUZZY.py:539
 msgid "Case Control Match Tolerances"
-msgstr ""
-"Tolleranze delle corrispondenze di controllo casi"
+msgstr "Tolleranze delle corrispondenze di controllo casi"
 
-#: FUZZY.py:540
 msgid "Match Variables"
-msgstr ""
-"Metti in corrispondenza le variabili"
+msgstr "Metti in corrispondenza le variabili"
 
-#: FUZZY.py:583
-msgid "Demander id variable not found, or it duplicates a name in the supplier dataset: %s"
+msgid ""
+"Demander id variable not found, or it duplicates a name in the supplier "
+"dataset: %s"
 msgstr ""
-"Variabile ID richiedente non trovata oppure è il duplicato di un nome nel dataset fornitore: %s "
+"Variabile ID richiedente non trovata oppure è il duplicato di un nome nel "
+"dataset fornitore: %s "
 
-#: FUZZY.py:934
 msgid "Undefined variable in BY list: %s"
-msgstr ""
-"Variabile non definita nell'elenco BY: %s"
+msgstr "Variabile non definita nell'elenco BY: %s"
 
-#: FUZZY.py:955
 msgid "Distribution of Available Matches"
-msgstr ""
-"Distribuzione delle corrispondenze disponibili"
+msgstr "Distribuzione delle corrispondenze disponibili"
 
-#: FUZZY.py:956
 msgid "Average matching cases available: %.2f"
-msgstr ""
-"Media dei casi corrispondenti disponibili: %.2f"
-
-
-
+msgstr "Media dei casi corrispondenti disponibili: %.2f"
