@@ -11,7 +11,7 @@ Description: This procedure matches cases and controls by utilizing ra
  in a single dataset, or the cases and controls can be in different da
  tasets.
 Author: JKP, IBM SPSS
-Version: 2.0.1
+Version: 2.0.2
 Product-Version: 24
 Date: 1/2/2014
 Product-Version-Maximum: 99
