@@ -24,7 +24,7 @@
 
 
 __author__ = "JKP, SPSS"
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 # history
 # 20-jan-2010  use processcmd, enable translation
@@ -37,6 +37,7 @@ __version__ = "1.3.0"
 # 12-apr-2012 Allow supplier and demander data to be in the same input file
 # 16-jul-2012 Allow custom fuzz function
 # 03-jan-2013 Add logging support, redesign minimize memory approach
+# 19-sep-2022 Add demander and supplier counts to output.
 
 import spss, spssaux, random, sys, inspect, locale, logging, time
 
@@ -309,19 +310,14 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
     each case
 """
     global logger   # logging object
+    # debugging
     #try:
         #import wingdbstub
-        #if wingdbstub.debugger != None:
-            #import time
-            #wingdbstub.debugger.StopDebug()
-            #time.sleep(1)
-            #wingdbstub.debugger.StartDebug()
-        #import thread
-        #wingdbstub.debugger.SetDebugThreads({thread.get_ident(): 1}, default_policy=0)
-        ## for V19 use
-        ##    ###SpssClient._heartBeat(False)
+        #import threading
+        #wingdbstub.Ensure()
+        #wingdbstub.debugger.SetDebugThreads({threading.get_ident(): 1})
     #except:
-        #print 'import failed'
+        #pass
 
     if not seed is None:
         random.seed(seed)
@@ -370,9 +366,15 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
     nomatchcount = 0
 
     with DataStep():
-        demanderdsx = spss.Dataset(demanderds)
+        try:
+            demanderdsx = spss.Dataset(demanderds)
+        except:
+            raise ValueError(_("Cannot access specified demander dataset"))
         if demanderds != supplierds:
-            supplierds = spss.Dataset(supplierds)
+            try:
+                supplierds = spss.Dataset(supplierds)
+            except:
+                raise ValueError(_("Cannot access specified supplier data"))
         else:
             supplierds = demanderdsx
         demanderds = demanderdsx
@@ -507,9 +509,9 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
 
     tbl = spss.BasePivotTable(_("Case Control Matching Statistics"), "CASECTRLSTATS")
     tbl.SetDefaultFormatSpec(spss.FormatSpec.Count)
-    rowlabels = [_("Exact Matches"), _("Fuzzy Matches"), _("Unmatched Including Missing Keys"),\
+    rowlabels = [_("Demander Cases"), _("Supplier Cases"), _("Exact Matches"), _("Fuzzy Matches"), _("Unmatched Including Missing Keys"),\
         _("Unmatched with Valid Keys"), _("""Sampling"""), _("""Log file"""), _("""Maximize Matching Performance""")]
-    cells = matcher.counts + [nomatchcount] + [samplewithreplacement and _("with replacement") or _("without replacement")] +\
+    cells = [matcher.demandercountin] + [matcher.suppliercountin] + matcher.counts + [nomatchcount] + [samplewithreplacement and _("with replacement") or _("without replacement")] +\
         [(logfile is None and _("""none""")) or logfile] + [minimizememory and _("yes") or _("no")]
 
     tbl.SimplePivotTable(rowdim = _("Match Type"),
@@ -694,12 +696,15 @@ class Matcher(object):
         self.exactcount = {}         # used in fuzzy matching to give priority to exact matches
         self.counts=[0,0,0]          # counts of exact, fuzzy, and unmatched cases
         self.usedsuppliers = set() # for sample wout replacement, tracks supplier cases used (case number)
+        self.demandercountin = 0
+        self.suppliercountin = 0
 
     def adddemander(self, case):
         """Add a demander.  Return 0 or 1 for whether added or not"""
 
         if self.groupindex != None and case[self.groupindex] != 1:
             return 0
+        self.demandercountin += 1
         h, keyvalues = self.hash(self.demandervars, case)
         if h is not None and not h in self.demanders:
             self.demanders[h] = []
@@ -738,6 +743,7 @@ class Matcher(object):
 """
         if self.groupindex != None and case[self.groupindex] != 0:
             return 0
+        self.suppliercountin += 1
         takecount = 0
         hlist = []   # accumulate all candidate cases when using minimize memory
         if not (self.fuzz or self.customfuzz):

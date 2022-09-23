@@ -4,7 +4,7 @@
 <!--                                                                   -->
 <!-- IBM SPSS Products: Statistics Common                              -->
 <!--                                                                   -->
-<!-- (C) Copyright IBM Corp. 1989, 2013                                -->
+<!-- (C) Copyright IBM Corp. 1989, 2020                                -->
 <!--                                                                   -->
 <!-- US Government Users Restricted Rights - Use, duplication or       -->
 <!-- disclosure restricted by GSA ADP Schedule Contract with IBM       -->
@@ -12,7 +12,7 @@
 <!--                                                                   -->
 <!-- ***************************************************************** -->
 <!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Jon Peck (SPSS Inc.) -->
-<Command xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extension-1.0.xsd" Name="FUZZY" Language="Python">
+<Command xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extension-1.0.xsd" Name="FUZZY" Language="Python" LanguageVersion="3">
 	<Subcommand Name="" Occurrence="Optional">
 		<Parameter Name="DEMANDERDS" ParameterType="DatasetName"/>
 		<Parameter Name="SUPPLIERDS" ParameterType="DatasetName"/>
