@@ -1,4 +1,5 @@
 Name: FUZZY
+Display-Name: Fuzzy matching
 Dialog-Specs: FUZZY.spd
 Command-Specs: FUZZY.xml
 Code-Files: FUZZY.py
