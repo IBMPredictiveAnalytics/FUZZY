@@ -24,7 +24,7 @@
 
 
 __author__ = "JKP, SPSS"
-__version__ = "1.3.1"
+__version__ = "2.0.0"
 
 # history
 # 20-jan-2010  use processcmd, enable translation
@@ -38,8 +38,15 @@ __version__ = "1.3.1"
 # 16-jul-2012 Allow custom fuzz function
 # 03-jan-2013 Add logging support, redesign minimize memory approach
 # 19-sep-2022 Add demander and supplier counts to output.
+# 20-mar-2023 Allow for best match.  No longer support minimizememory
+#             New matching algorithm
 
-import spss, spssaux, random, sys, inspect, locale, logging, time
+import spss, spssaux
+import random, sys, locale, logging, time, bisect
+from collections import namedtuple
+
+Supp = namedtuple('Supp', ["casenum", "diff", "suppcase"])
+
 
 
 # The following code defines the SPSS syntax and implements the Run method.  The function
@@ -226,6 +233,8 @@ def Run(args):
     Template("BY", subc="", var="by", ktype="varname", islist=True),
     Template("FUZZ", subc="", var="fuzz", ktype="float", islist=True),
     Template("EXACTPRIORITY", subc="", var="exactpriority", ktype="bool"),
+    Template("BEST", subc="", var="best", ktype="str",
+        vallist=["propor", "abs", "squared"]),
     Template("CUSTOMFUZZ", subc="", var="customfuzz", ktype="literal"),
     Template("GROUP", subc="", var="group", ktype="existingvarlist", islist=False),
     Template("SUPPLIERID", subc="", var="supplierid", ktype="varname"),
@@ -234,10 +243,13 @@ def Run(args):
     Template("MATCHGROUPVAR", subc="", var="hashvar", ktype="varname"),
     Template("DRAWPOOLSIZE", subc="", var="drawpool", ktype="varname"),
     Template("DEMANDERID", subc="", var="demanderid", ktype="varname"),
+    
     Template("SAMPLEWITHREPLACEMENT", subc="OPTIONS", var="samplewithreplacement", ktype="bool"),
     Template("MINIMIZEMEMORY", subc="OPTIONS", var="minimizememory",  ktype="bool"),
     Template("SEED", subc="OPTIONS", var="seed", ktype="int",vallist=(-2**31+1, 2**31-1)),
     Template("SHUFFLE", subc="OPTIONS", var="shuffle", ktype="bool"),
+    Template("MAXQUEUE", subc="OPTIONS", ktype="float", var="maxqueue",
+        vallist=[.01, 1.0]), 
     Template("LOGFILE", subc="OUTFILE", var="logfile", ktype="literal"),
     Template("ACCESSMODE", subc="OUTFILE", var="logaccessmode", ktype="str", vallist=("append", "overwrite"))
     ])
@@ -279,9 +291,9 @@ class DataStep(object):
 
 def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, group=None,
                 copytodemander=[], ds3=None,  demanderid=None, samplewithreplacement=False,
-                hashvar="matchgroup", seed=None, shuffle=False, minimizememory=True,
-                fuzz=None, exactpriority=True, drawpool=None, customfuzz=None,
-                logfile=None, logaccessmode="overwrite"):
+                hashvar="matchgroup", seed=None, shuffle=False, minimizememory=False,
+                fuzz=None, exactpriority=True, drawpool=None, customfuzz=None, best="propor", 
+                maxqueue=1.0, logfile=None, logaccessmode="overwrite"):
     """Find match for demanderds cases in supplierds and add identifiers to demanderds.  Return unmatched count. 
     
     demanderds is the dataset name of cases needing a match (demanders)
@@ -303,8 +315,10 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
     Since shuffling requires O(N) memory and will be slower, presorting the demander dataset by a random number is an alternative.
     If minimizememory is true, only one eligible case is assigned to eachdemander, and the available matches table is suppressed.
     If fuzz is not None, it must be a sequence of half-ranges, one per by variable.  Use 0 for any nonnumeric variables.
+    If fuzz is None, matches must be exact on all matching variables.
     By default, with fuzzy matching, exact matches take priority when available except with minimizememory.  
     Set exactpriority False to treat all equally.
+    best specifies whether differences are computed as absolute value or squared diff
     Minimize memory cannot be used with exactpriority.
     drawpool names a variable to be created in the demander ds whose value is the size of the pool for
     each case
@@ -322,6 +336,8 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
     if not seed is None:
         random.seed(seed)
 
+    # minimizememory no longer supported 3/2023
+    minimizememory = False
     myenc = locale.getlocale()[1]  # get current encoding in case conversions needed
     by = spssaux._buildvarlist(by)
     matchslots = spssaux._buildvarlist(matchslots)
@@ -384,6 +400,9 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
             drawpoolindex = demanderds.varlist[drawpool].index
         else:
             drawpoolindex = None
+
+        demanderds.varlist.append("matchdiff_")   # variable for diff between case and control.
+        matchdiffindex = demanderds.varlist["matchdiff_"].index    # where difference variables start
         demanderds.varlist.append(hashvar)
         hashvarindex = demanderds.varlist[hashvar].index
 
@@ -442,7 +461,7 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
                 raise ValueError(_("Error: supplier/demander type conflicts exist for variables: ") + typeconflicts)
 
         matcher = Matcher(by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement,
-            minimizememory, fuzz, exactpriority, groupindex, customfuzz)
+            minimizememory, fuzz, exactpriority, groupindex, customfuzz, best, matchdiffindex, maxqueue)
 
         # First pass the demander dataset to establish all required matches.  
         # If minimizing memory, pass the supplier dataset to count cases for each required key.
@@ -465,19 +484,15 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
                 logger.info("Cumulative demanders added = %s" % addcount)
             addcount += matcher.adddemander(demanderdscases[i])
         logger.info("Done adding demanders.  Number added = %s" % addcount)
-
-        #if minimizememory:
-            #logger.info("Counting suppliers")
-            #for i in xrange(supplierdssize):
-                #if i%1000 == 999:
-                    #logger.info("Potential suppliers counted = %s" % i)
-                #matcher.countsuppliers(supplierdscases[i])
-            #logger.info("Done counting suppliers")
+        
+        if addcount == 0:
+            raise ValueError(_("There are no demander cases.  Check the input dataset or group indicator"))
+        matcher.setSafetyValve()
 
         logger.info("Adding suppliers.  suppliersize = %s (for single dataset usage, this is the total casecount)" % supplierdssize)
         addcount = 0
         matchmaker = Matchmaker(demanderdscases, matcher, hashvarindex, supplierdscases, dsextra,
-            demandercopyindexes, suppliercopyindexes, demanderidindex, drawpoolindex, supplieridindex, group)
+            demandercopyindexes, suppliercopyindexes, demanderidindex, drawpoolindex, supplieridindex, group, matchdiffindex)
         matcher.domatch = matchmaker.do
         for i in range(supplierdssize):
             if i%1000 == 999:
@@ -509,11 +524,12 @@ def casecontrol(by, supplierid, matchslots, demanderds=None, supplierds=None, gr
 
     tbl = spss.BasePivotTable(_("Case Control Matching Statistics"), "CASECTRLSTATS")
     tbl.SetDefaultFormatSpec(spss.FormatSpec.Count)
-    rowlabels = [_("Demander Cases"), _("Supplier Cases"), _("Exact Matches"), _("Fuzzy Matches"), _("Unmatched Including Missing Keys"),\
-        _("Unmatched with Valid Keys"), _("""Sampling"""), _("""Log file"""), _("""Maximize Matching Performance""")]
-    cells = [matcher.demandercountin] + [matcher.suppliercountin] + matcher.counts + [nomatchcount] + [samplewithreplacement and _("with replacement") or _("without replacement")] +\
-        [(logfile is None and _("""none""")) or logfile] + [minimizememory and _("yes") or _("no")]
-
+    rowlabels = [_("Demander Cases"), _("Supplier Cases"), _("Matches"), _("Unmatched"),
+        _("""Sampling"""), _("""Log file"""), _("Demander Queue Limit")]
+    cells = [matcher.demandercountin] + [matcher.suppliercountin] + matcher.counts +\
+    [samplewithreplacement and _("with replacement") or _("without replacement")] +\
+        [(logfile is None and _("""none""")) or logfile] + [matcher.safetyValve]
+    tbl.TitleFootnotes(_(f"""Match variables: {" ".join(by)}"""))
     tbl.SimplePivotTable(rowdim = _("Match Type"),
         rowlabels=rowlabels,
         coldim="",
@@ -590,7 +606,7 @@ class Matchmaker(object):
 
     def __init__(self, demanderdscases, matcher, hashvarindex, supplierdscases, ds3cases,
                  demandercopyindexes, suppliercopyindexes,
-                 demanderidindex, drawpoolindex, supplieridindex, group):
+                 demanderidindex, drawpoolindex, supplieridindex, group, matchdiffindex):
         """demanderdscases is the demander case to match.
         matcher is the Matcher object to use.
         hashvarindex is the variable index for the hash value variable.  The matches are written to following contiguous variables.
@@ -609,15 +625,23 @@ class Matchmaker(object):
         if self.matcher.groupindex != None and self.demanderdscases[casenumber][self.matcher.groupindex] != 1:
             return 0
 
-        hash, matches, drawpoolsize = self.matcher.draw(self.demanderdscases[casenumber], self.supplierdscases)  # 3/1
+        hash, matches, drawpoolsize, matchdiff = self.matcher.draw(self.demanderdscases[casenumber], self.supplierdscases)  # 3/1
         self.demanderdscases[casenumber, self.hashvarindex] = hash
+        diffs = [item for item in matchdiff if item is not None]
+        if diffs:
+            meandiff = sum(diffs) / len(diffs)
+        else:
+            meandiff = None     
+        self.demanderdscases[casenumber, self.matchdiffindex] = meandiff
         if self.drawpoolindex:
             self.demanderdscases[casenumber, self.drawpoolindex] = drawpoolsize
+        
+  
         for m in range(len(matches)):
-            casenum = matches[m][0]    # case number of the supplier dataset
-            self.demanderdscases[casenumber, self.hashvarindex + 1 + m] = matches[m][1]
-
+            casenum = matches[m]    # case number of the supplier dataset
             if casenum is not None:
+                suppid = self.supplierdscases[matches[m], self.supplieridindex]
+                self.demanderdscases[casenumber, self.hashvarindex + 1 + m] = suppid    # was 1
                 for dv, sv in zip(self.demandercopyindexes, self.suppliercopyindexes):
                     self.demanderdscases[casenumber,dv] = self.supplierdscases[casenum, sv]
 
@@ -645,15 +669,15 @@ class Matcher(object):
     """Build, maintain, and draw from hash lists for cases"""
 
     def __init__(self, by, supplierid, demanderds, supplierds, nmatches, samplewithreplacement, minimizememory,
-        fuzz, exactpriority, groupindex, customfuzz):
+        fuzz, exactpriority, groupindex, customfuzz, best, matchdiffindex, maxqueue):
         """by is a variable or list of variables to match on.
         supplierid is the id variable name in the supplier dataset.
         demanderds and supplierds are the demander and supplier datasets.
         nmatches is the number of matches requested for each demander.
         samplewithreplacement indicates sampling with or without replacement.
         If minimizememory is True, an extra data pass is required but memory usage for the supplier set is reduced.
-        fuzz is a sequence of fuzz factors, one for each by variable.  If the variable is not numeric, fuzz must be None.
-        If exactpriority, exact matches get preference over fuzzy matches when fuzzy matching allowed.
+        fuzz is a sequence of fuzz factors, one for each by variable.  If the variable is not numeric, fuzz must be zero.
+
         
         A DataStep is expected to be active for this class."""
 
@@ -667,6 +691,7 @@ class Matcher(object):
         self.groupindex = groupindex
 
         self.demandervars = self.buildvars(demanderds, by)  # indexes of demander match variables
+        self.nvars = len(self.demandervars)
         self.demanderscopy = set()   # disposable copy of demander hashes
         self.suppliervars = self.buildvars(supplierds, by)      # indexes of supplier match variables (same names but could be different indexes)
         self.samplewithreplacement=samplewithreplacement
@@ -682,6 +707,8 @@ class Matcher(object):
             self.customfuzz = getattr(sys.modules[customparts[0]], customparts[1])
         else:
             self.customfuzz = None
+        self.best = best
+        self.maxqueue = maxqueue
 
         # if fuzzy matching, keep count of tries incremental rejections overall and by variable
         if fuzz:
@@ -691,13 +718,18 @@ class Matcher(object):
             self.tries = {0:0}
             self.rejections = {0:0}
         self.freqs = Freqs()
-        self.exactpriority = exactpriority
         self.bys = {}                     # holds demander key variables for use in fuzzy match calculations
         self.exactcount = {}         # used in fuzzy matching to give priority to exact matches
-        self.counts=[0,0,0]          # counts of exact, fuzzy, and unmatched cases
+        self.counts=[0,0]          # counts of exact, fuzzy, and unmatched cases
         self.usedsuppliers = set() # for sample wout replacement, tracks supplier cases used (case number)
         self.demandercountin = 0
         self.suppliercountin = 0
+        
+    def setSafetyValve(self):
+        # Set limit on number of suppliers to add to a demander based on worst case inputs
+        # but allow user to scale it down
+        raw = max(1, round((self.demandercountin * self.nmatches + 1) * self.maxqueue))
+        self.safetyValve = max(raw, 5)
 
     def adddemander(self, case):
         """Add a demander.  Return 0 or 1 for whether added or not"""
@@ -710,9 +742,9 @@ class Matcher(object):
             self.demanders[h] = []
             if self.fuzz or self.customfuzz:
                 self.bys[h] = keyvalues
-        if self.minimizememory and h is not None:
-            self.demandercount[h] = self.demandercount.get(h, 0) + self.nmatches  # 5/28/09
-            self.demanderscopy.add(h)
+        #if self.minimizememory and h is not None:
+            #self.demandercount[h] = self.demandercount.get(h, 0) + self.nmatches  # 5/28/09
+            #self.demanderscopy.add(h)
         return 1
 
     #def countsuppliers(self, case):
@@ -745,60 +777,30 @@ class Matcher(object):
             return 0
         self.suppliercountin += 1
         takecount = 0
-        hlist = []   # accumulate all candidate cases when using minimize memory
-        if not (self.fuzz or self.customfuzz):
+        hlist = []
+        if not (self.fuzz or self.customfuzz):   # no fuzz, so exact match required
             h, values = self.hash(self.suppliervars, case)
-            if h in self.demanders:
-                if not self.minimizememory:
-                    self.demanders[h].append((casenum, case[self.supplierid]))
-                    takecount += 1
-                else:
-                    if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:
-                        self.demanders[h].append((casenum, case[self.supplierid]))
-                        takecount += 1
-                    #if self.suppliercount[h] > 0:
-                        #take = (random.uniform(0,1) * self.suppliercount[h]) < self.demandercount[h]
-                        #self.demandercount[h] = self.demandercount[h] - take
-                        #self.suppliercount[h] = self.suppliercount[h] - 1
-                        #if take:
-                            #self.demanders[h].append((casenum, case[self.supplierid]))
-                            #takecount += 1
+            if h in self.demanders:   # a demander case has the same hash, i.e., match
+                self.demanders[h].append(Supp(casenum, 0, case[self.supplierid]))
+                if len(self.demanders[h]) > self.safetyValve:
+                    self.demanders[h].pop()
+                takecount += 1
+
+        # there is a fuzz specification or custom fuzz function
         else:
-            if self.minimizememory:
-                demanders = self.demanderscopy
-            else:
-                demanders = self.demanders
-            #for h in self.demanders:
-            for h in demanders:
-                matchlevel =  self.rehash(h, case)
+            demanders = self.demanders
+            for h in self.demanders:
+                matchlevel, code =  self.rehash(h, case)
                 if matchlevel == 0:
                     continue
-                if not self.minimizememory:
-                    if matchlevel == 2:    # exact match.  Put at head of list and increment count
-                        self.demanders[h].insert(0, (casenum, case[self.supplierid]))
-                        self.exactcount[h]  = self.exactcount.get(h, 0) + 1
-                    else:    # fuzzy match
-                        self.demanders[h].append((casenum, case[self.supplierid]))
-                    takecount += 1
+                if matchlevel == 2:    # exact match.  Put at head of list and increment count
+                    self.demanders[h].insert(0, Supp(casenum, 0, case[self.supplierid]))
                 else:
-                    # try to have as many suppliers as demanders in this bucket accounting for multiple matches
-                    #                 suppliers needed                            suppliers so far
-                    shortfall = self.demandercount[h] * self.nmatches - len(self.demanders[h])
-                    if shortfall == 1:
-                        demanders.remove(h)
-                    if shortfall > 0:
-                        hlist.append(h)
-                        break
-                    #if len(self.demanders[h]) < self.demandercount[h] * self.nmatches:
-                        #hlist.append(h)
-                        #demanders.remove(h)
-                        #break   # stop as soon as one demander is found
-            # if this supplier matched any demander (using minimizememory), pick one
-            # demander at random and add the supplier to it
-            if len(hlist) > 0:
-                winner = random.choice(hlist)
-                self.demanders[winner].append((casenum, case[self.supplierid]))
-                takecount = 1
+                    bisect.insort(self.demanders[h], Supp(casenum, code, case[self.supplierid]))
+                if len(self.demanders[h]) > self.safetyValve:
+                    self.demanders[h].pop()                 
+                takecount += 1
+
         return takecount
 
     def rehash(self, h, case):
@@ -810,28 +812,45 @@ class Matcher(object):
         -  0 if no match
         -  1 if fuzzy match
         -  2 if exact match
+        + sum absolute or squared diff if fuzzy, else 0
         """
 
-        hh, values = self.hash(self.suppliervars, case)   # first see if exact match
+        hh, values = self.hash(self.suppliervars, case)   # first see if exact match, i.e., match vars are identical
         self.tries[0] += 1
         if hh == h:
-            return 2
+            return 2, 0   # exact indicator, difference score
         else:
             self.rejections[0] += 1
         dcase = self.bys[h]
+        cumdiff = 0
         if self.customfuzz:
-            # function should return 0 or 1 but a 2 could be used to prioritize a nonexact match
+            # function takes two lists and should return 0 or 1,
+            # but a 2 could be used to prioritize a nonexact match
             result = self.customfuzz(dcase, [case[i] for i in self.suppliervars])
+            if result == 0:
+                return result, 0
         else:
-            result = 1  # fuzzy match
-            for i, fuzz in enumerate(self.fuzz):
-                self.tries[i+1] += 1
-                # place to allow for custom matching calculator
-                if not diff(dcase[i], case[self.suppliervars[i]]) <= fuzz:
-                    self.rejections[i+1] += 1  # count first variable causing rejection
-                    result = 0
-                    break
-        return result
+            result = 1  # fuzzy match.  Calculate match difference
+        # calculate match quality
+        # fuzz  limits apply even with a custom function
+        for i, fuzz in enumerate(self.fuzz):
+            self.tries[i+1] += 1
+            # place to allow for custom matching calculator
+            # diff returns absolute difference between a demander and suplier match variable
+            ccdiff =  diff(dcase[i], case[self.suppliervars[i]])
+            if not ccdiff <= fuzz:
+                self.rejections[i+1] += 1  # count first variable causing rejection
+                result = 0  # 0,0  no match
+                break
+            if self.best == "squared":
+                cumdiff += ccdiff ** 2
+            elif self.best == "abs":
+                cumdiff += ccdiff
+            else:
+                if ccdiff > 0:
+                    cumdiff += ccdiff / (abs(dcase[i]) + abs(case[self.suppliervars[i]]))
+        cumdiff = cumdiff / self.nvars
+        return result, cumdiff
 
     def filteredlist(self, h):
         """Return the list of potential suppliers
@@ -848,8 +867,8 @@ class Matcher(object):
         lenthelist = len(thelist)
         for j in range(lenthelist, 0, -1):
             i = j - 1
-            casenum, hh = thelist[i]
-            if casenum in self.usedsuppliers:
+            #casenum, diff, hh = thelist[i]
+            if thelist[i].casenum in self.usedsuppliers:
                 thelist.pop(i)
                 if i < exactcount:
                     self.exactcount[h] -= 1
@@ -860,55 +879,82 @@ class Matcher(object):
         
         Return a list of nmatches match ids preceded by the hash value.  If no match is possible, None is returned for each.
         If the case is missing any match variable, no matches will be drawn.
-        If using fuzzy matching and exact matches get priority, an exact match is first attempted and if not available, a fallback
-        to a fuzzy match is attempted.
         """
 
         if self.groupindex != None and case[self.groupindex] != 1:
+            #h, draws, initiallistsize, matchdiff
             return None, [(None, None)], None
         h, values = self.hash(self.demandervars, case)
         # get eligibles.  If sampling without replacement, previously used cases are removed.
         thelist = self.filteredlist(h)
-        #thelist = self.demanders.get(h, ())
         draws = []
-        listsize = len(thelist)
-        initiallistsize = listsize  # tallying only for full list.  If multiple draws requested per case, actual would shrink
+        initiallistsize = len(thelist)  # tallying only for full list.  If multiple draws requested per case, actual would shrink
         self.freqs.accumulate(initiallistsize)
 
+        matchdiff = []
         for i in range(self.nmatches):
-            if listsize == 0:
-                draws.append((None, None))
-                self.counts[2] += 1
+            scase, diff = self.picker(thelist)
+            draws.append(scase)
+            matchdiff.append(diff)
+            ###print(scase, diff)   #debug
+
+        return h, draws, initiallistsize, matchdiff
+
+    def picker(self, thelist):
+        """Find a supplier match and return its casenum and diff
+        
+        thelist is the unpruned list of eligibles, so it may contain used cases
+        listsize is its length"""
+        
+        listsize = len(thelist)
+        startat = 0
+        while True:
+            # find first (smallest) unused eligible case
+            for i in range(listsize):
+                if not thelist[i].casenum in self.usedsuppliers:
+                    startat = i
+                    break
+            else:      # no unused cases
+                self.counts[1] += 1
+                return None, None
+            
+            # find the cases with the same diff.  The first case will always qualify
+            testvalue = thelist[startat].diff
+            for j in range(startat, listsize):
+                if thelist[j].diff != testvalue:
+                    endat = j
+                    break
             else:
-                if self.fuzz and self.exactpriority:
-                    exactcount = self.exactcount.get(h, 0)
-                    if exactcount > 0:        # first take a random exact match
-                        choiceindex = random.randint(1, exactcount) -1
-                        if self.samplewithreplacement:
-                            draws.append(thelist[choiceindex])
-                        else:
-                            draws.append(thelist.pop(choiceindex))
-                            self.usedsuppliers.add(draws[-1][0])  # add case number to used set
-                            self.exactcount[h] -= 1
-                            listsize -= 1
-                        self.counts[0] += 1
-                        continue
-                # exact match not available, take anything eligible
-                # but if no fuzz, only exact cases are in the eligable list
-                choiceindex = random.randint(1, listsize) -1
-                if self.samplewithreplacement:
-                    draws.append(thelist[choiceindex])
-                else:
-                    draws.append(thelist.pop(choiceindex))
-                    self.usedsuppliers.add(draws[-1][0])  # add to used set
-                    listsize -= 1
-                # might get an exact match by chance, so recheck the outcome
-                shash, svalues = self.hash(self.suppliervars, supplierdscases[draws[-1][0]])
-                if shash == h:
-                    self.counts[0] += 1
-                else:
-                    self.counts[1] += 1
-        return h, draws, initiallistsize
+                endat = listsize
+                
+            # try to pick a supplier case at random
+            # there must always be at least one case in the group.
+            if self.samplewithreplacement:
+                choiceindex = random.randint(startat, endat)
+                draw = thelist[choiceindex]
+            else:
+                # draw until an unused case is found or no more cases in this diff group
+                while startat <= endat:
+                    choiceindex = random.randint(startat, endat-1)
+                    draw =  thelist.pop(choiceindex)
+                    if not draw.casenum in self.usedsuppliers:
+                        self.usedsuppliers.add(draw.casenum)  # add case number to used set                
+                        break
+                    else:
+                        draw = None
+                    endat -= 1
+            if draw:
+                break
+            startat = endat   # move up to next diff level
+        else:
+            # no suppliers available
+            self.counts[1] += 1
+            return None, None
+        
+        self.counts[0] += 1
+        return draw.casenum, draw.diff
+
+       
 
     def hash(self, indexes, case):
         """Return a hash of the case according to the indexes in the indexes tuple and the key values.

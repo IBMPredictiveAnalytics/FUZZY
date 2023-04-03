@@ -15,15 +15,16 @@
 
 <p>Match cases from two datasets based on one or more keys drawing randomly from matching cases.</p>
 
-<p>Note: the original version of this command was called CASECTRL.  FUZZY
-is a superset of that functionality.</p>
 <div class="syntax">
-<p>FUZZY DEMANDERDS = <em>dataset</em> SUPPLIERDS = <em>dataset</em> BY = <em>keys</em><sup>&#42;</sup>
-SUPPLIERID = <em>variable</em> NEWDEMANDERIDVARS = <em>variables</em><br/>
+<p>FUZZY <br/>
+DEMANDERDS = <em>dataset</em><br/>
+SUPPLIERDS = <em>dataset</em><br/>
+BY = <em>keys</em><sup>&#42;</sup><br/>
+SUPPLIERID = <em>variable</em><br/>
+NEWDEMANDERIDVARS = <em>variables</em><br/>
 GROUP = <em>variable</em><br/>
 FUZZ = <em>matching tolerances</em><br/>
 CUSTOMFUZZ = <em>user-written function for calculating match eligibility</em><br/>
-EXACTPRIORITY = TRUE<sup>&#42;</sup> or FALSE<br/>
 COPYTODEMANDER = <em>supplier variable names</em><br/>
 MATCHGROUPVAR = <em>variable</em> (default is &ldquo;matchgroup&rdquo;)<br/>
 DRAWPOOLSIZE = <em>variable</em><br/>
@@ -31,12 +32,14 @@ DEMANDERID = <em>variable</em><br/>
 DS3 = <em>dataset</em></p>
 
 <p>/OPTIONS
-SAMPLEWITHREPLACEMENT=TRUE or FALSE<sup>&#42;&#42;</sup><br/>
-MINIMIZEMEMORY = TRUE<sup>&#42;&#42;</sup> or FALSE<br/>
-SHUFFLE = TRUE or FALSE<sup>&#42;&#42;</sup><br/>
+SAMPLEWITHREPLACEMENT=NO<sup>&#42;&#42;</sup> or YES<br/>
+BEST = PROPOR<sup>&#42;&#42;</sup> or ABS or SQUARED<br/>
+MAXQUEUE = fraction<br/>
+SHUFFLE = NO<sup>&#42;&#42;</sup> or YES<br/>
 SEED = <em>number</em></p>
 
-<p>/OUTFILE LOGFILE=&ldquo;<em>filespec</em>&rdquo;&ldquo; LOGACCESSMODE=OVERWRITE<sup>&#42;&#42;</sup> or APPEND</p>
+<p>/OUTFILE LOGFILE=&ldquo;<em>filespec</em>&rdquo;&ldquo;</br>
+LOGACCESSMODE=OVERWRITE<sup>&#42;&#42;</sup> or APPEND</p>
 
 <p>/HELP.</p>
 
@@ -83,16 +86,6 @@ values of 1 and 2 would match if tolerance is 1 or more, and a tolerance of zero
 exact match on that variable.  You must use 0 for any string variable.  If <strong>FUZZ</strong> is used,
 rejection counts for each variable are show in the output.</p>
 
-<p>By default, with fuzzy matching, an exact match is first tried, and then a fuzzy match is tried.
-There is no attempt to get the closest fuzzy match, just a match within the tolerance.
-<strong>EXACTPRIORITY</strong> = FALSE causes all suppliers within the fuzz range to be considered equally.
-EXACTPRIORITY must be FALSE if MINIMIZEMEMORY is TRUE.</p>
-
-<p>Using EXACTPRIORITY may introduce a subtle artifact that may need to be considered in
-subsequent analysis.  While it will generally produce closer matches, cases with variable values 
-where candidates are scarce will tend to get matches that differ more than where candidates
-are abundant.</p>
-
 <p><strong>CUSTOMFUZZ</strong> can be used to substitute a user-written calculation for the
 built-in fuzzy calculation.  It should specify a Python module name and function
 as a quoted string, e.g. &quot;mymodule.fuzzycalc&rdquo;.  The function should return</p>
@@ -100,7 +93,7 @@ as a quoted string, e.g. &quot;mymodule.fuzzycalc&rdquo;.  The function should r
 <ul>
 <li>0 - no match</li>
 <li>1- fuzzy match.</li>
-<li>It coudl also return 2 (exact match).</li>
+<li>It could also return 2 (exact match).</li>
 </ul>
 
 <p>If the case comparison produced an exact match, this function is not called.
@@ -156,20 +149,13 @@ the supplier pool is thin.  The variable must not already exist in the demander 
 <p>By default, sampling from the supplier dataset is done without replacement.  Specify
 <strong>SAMPLEWITHREPLACEMENT</strong>=TRUE to sample with replacement.</p>
 
-<p>By default, memory usage is minimized in picking supplier dataset candidate match cases
-(all eligible cases have an equal probability of selection).  This requires an extra data pass.  If
-the possible number of matching cases for a demander case is small or the supplier dataset is
-not large, specifying
-<strong>MINIMIZEMEMORY</strong>=FALSE may improve performance by eliminating the extra data pass.  In the
-case of 1-1 matching, this is recommended.
-MINIMIZEMEMORY=TRUE cannot be combined with EXACTPRIORITY=TRUE.</p>
+<p><strong>BEST</strong> specifies how to measure the quality of a potential match.
+See the section below on the matching algorithm for details.</p>
 
-<p>When MINIMIZEMEMORY=TRUE, each supplier case is eligible for assignment at random 
-to just one demander case for which it is within tolerance.  When FALSE, the case is 
-eligible for all cases within the tolerance, and one is picked at random from all of those.
-This means that when TRUE, a usually small number of demander cases may go unmatched
-when a match could have been found, but when FALSE, the matching tables can become
-very large, especially in the PSM case.</p>
+<p><strong>MAXQUEUE</strong> specifies how to scale down the limit on
+the maximum number of supplier candidates to consider for a demander.
+It must be a positive fraction less than or equal to 1.
+See the discussion below for details.</p>
 
 <p>By default, cases in the demander dataset are processed in case order.  If there are insufficient 
 supplier cases, you may specify <strong>SHUFFLE</strong>=TRUE to process the demander cases in random order.
@@ -187,7 +173,35 @@ appends to the log file.
 The contents record the state the process has reached and writes the number of operations
 completed at 1000 or 5000 case intervals for some operations.</p>
 
-<p>&copy; Copyright IBM Corp. 1989, 2014</p>
+<h2>The Matching Algorithm</h2>
+<p>
+In this discussion, the two groups or files of cases are referred to as demanders and suppliers to avoid confusion with the term "case" as in case-control.</p>
+<p>The goal of matching is to find for each demander case one or more supplier cases that are as similar to it as possible based on the match variables.  By default, the matching variable values must be exactly equal for a demander and supplier to match, but the user can specify a "fuzz" factor for each match variable that defines the maximum allowed absolute difference between demander and supplier.  Thus, when fuzz values are not specified, it is equivalent to specifying all the matching variable values to be identical.  Categorical variables, including all string variables, should have a fuzz of zero as difference distance is not meaningful.   If a match variable value is missing, that case is excluded from matches.</p>
+<p>
+The algorithm has two steps.  In the first step, each supplier case is associated with all the demander cases for which it is eligible, that is, for which the match variable differences are within the fuzz values, and a difference score is computed.  There are three options for computing the score.  Each computes the mean over the match variables for the demander case.  d(i) and s(i) are the values of the ith match variable for the demander and supplier cases.  The statistic options are.
+<ul>
+<li>PROPOR: abs(d(i) – s(i)) / (abs(d(i)) + abs(s(i)))</li>
+<li>ABS: abs(d(i) – s(i))</li>
+<li>SQUARED: (d(i) – s(i))**2</li>
+</ul>
+<p>
+If the denominator in the first expression is zero, the expression is zero.  That could only happen if d(i) equals s(i).  The first option adjusts for differences in scale of the match variables.  If using either ABS or SQUARED, consider standardizing the match variables before matching.  If the fuzz values are all zero, i.e., exact match, all these formulas yield a zero mean.</p>
+
+<p>The maximum length of the demander queue defaults to the number of demander cases times the
+number of matches per case requested with the worst potential matches pruned as necessary.  This is
+a worst-case limit.  It can be scaled down by the MAXQUEUE factor if memory usage is an issue.
+</p>
+
+
+<p>In the second step, for each demander case, the eligible suppliers with the smallest score are filtered to exclude cases already matched if sampling without replacement, and a supplier is picked at random from those cases.  If all the smallest-score supplier cases have already been used and sampling without replacement, the next best set of cases are selected, and the process is repeated and so on.  If all the eligible suppliers are exhausted, there is no match.  If more than one match is requested, the process is repeated with the remaining eligible cases, and the match quality value is the average over those cases.  All draws for a demander case are processed before moving on to the next case.  If a supplier case has been selected and sampling without replacement, it is not available for later matching.
+</p>
+<p>The output from matching includes a variable named matchdiff_ that holds the mean difference over the matches for each demander case.  Examining the distribution of this variable via a histogram or other measures is helpful in assessing the quality of the matches.  The output also includes statistics on the number of successful and failed matches and the distribution of available matches over the cases.  Other useful statistics would be comparisons of the distributions of the matching variables between the demander and supplier datasets.</p>
+
+<p>NOTE: In versions of this command prior to 2.0, a different matching algorithm was used.  The current version will generally produce better matches.  The EXACTPRIORITY and MINIMIZEMEMORY keywords are no longer used: they can still appear in the syntax but will be ignored.  EXACTPRIORITY would be redundant because the current algorithm always takes the best match.</p>
+
+
+
+<p>&copy; Copyright IBM Corp. 1989, 2023</p>
 
 </body>
 

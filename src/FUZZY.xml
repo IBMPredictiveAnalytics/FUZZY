@@ -28,12 +28,14 @@
 		<Parameter Name="FUZZ" ParameterType="NumberList"/>
 		<Parameter Name="EXACTPRIORITY" ParameterType="Keyword"/>
 		<Parameter Name="CUSTOMFUZZ" ParameterType="QuotedString"/>
+		<Parameter Name="BEST" ParameterType="Keyword"/>
 	</Subcommand>
 	<Subcommand Name="OPTIONS" Occurrence="Optional">
 		<Parameter Name="SAMPLEWITHREPLACEMENT" ParameterType="Keyword"/>
 		<Parameter Name="MINIMIZEMEMORY" ParameterType="Keyword"/>
 		<Parameter Name="SHUFFLE" ParameterType="Keyword"/>
 		<Parameter Name="SEED" ParameterType="Number"/>
+		<Parameter Name="MAXQUEUE" ParameterType="Number"/>
 	</Subcommand>
 	<Subcommand Name="OUTFILE" Occurrence="Optional">
 		<Parameter Name="LOGFILE" ParameterType="OutputFile"/>
