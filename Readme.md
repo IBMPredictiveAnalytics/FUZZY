@@ -1,13 +1,11 @@
 # FUZZY
 ## Perform exact or fuzzy case-control matching.
-This procedure matches cases and controls by utilizing random draws from the controls, based on a specified set of key variables. The command supports exact and fuzzy matching.  The input can be in a single dataset, or the cases and controls can be in different datasets.
+ This procedure matches cases and controls by utilizing ra
 
 ---
 Requirements
 ----
-- IBM SPSS Statistics 18 or later and the corresponding IBM SPSS Statistics-Integration Plug-in for Python.
-
-Note: For users with IBM SPSS Statistics version 19 or higher, the FUZZY extension is installed as part of IBM SPSS Statistics-Essentials for Python.
+- IBM SPSS Statistics 27 or later
 
 ---
 Installation intructions
