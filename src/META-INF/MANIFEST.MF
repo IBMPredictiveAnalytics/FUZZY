@@ -1,5 +1,5 @@
 Name: FUZZY
-Display-Name: Fuzzy matching
+Display-Name: Case Control Matching
 Dialog-Specs: FUZZY.cfe
 Command-Specs: FUZZY.xml
 Code-Files: FUZZY.py
